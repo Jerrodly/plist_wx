@@ -19,7 +19,7 @@ var Api = RichBase.extend({
 		var defaults = {
 			action : "product_list",
 			page : 1,
-			url : statics.url,
+			url : statics.api,
 			size : statics.pageSize,
 			type : statics.type,
 			ttimeout : statics.ttimeout,

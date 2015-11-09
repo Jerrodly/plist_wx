@@ -1,0 +1,16 @@
+<style type="text/css">
+    .ui-filterBar{ height:40px;}
+    .ui-filterBar .ui-filterItem{ line-height:40px;}
+    #filterBar{ -webkit-transition:all 0.4s; transition:all 0.4s;}
+    #filterBar.hide{ bottom:-100px;}
+</style>
+<div style="position:fixed" data-ptype="<?=$_GET['ptype']?>" id="filterBar" class="filterBar ui-filterBar">
+    <div class="con ui-flex">
+        <a id="switchTopicBtn" style="display:block; color:#fff" href="#topic?active=" class="ui-filterItem ui-filterItem-tap ui-filterItem-topic ui-flex-box topic" data-param="topic" data-showtext="" data-val="">
+            <i class="iconfont">&#xe6a7;</i><span class="t"><?=$topic?></span>
+        </a>
+        <div class="ui-filterItem ui-flex-box ui-filterItem-city city" data-param="area" data-val="">
+            <a id="" style="display:block; height:100%; color:#fff" href="#openAllCity"><i class="iconfont">&#xe603;</i><span class="t"></span></a>
+        </div>
+    </div>
+</div>

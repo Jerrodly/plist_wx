@@ -61,10 +61,10 @@ var UI = RichBase.extend({
 				html = '<li id="ajax_status_li" class="sta refresh serverError"><i class="iconfont">&#xe669;</i><span class="t">请求出错,请稍后重试</span></li>';
 				break;
 		}
-		if(type.indexOf("refresh")){
-			list.html(html);
+		if(type.indexOf("refresh")>=0){
+			listUl.html(html);
 		}else{
-			list.append(html);
+			listUl.append(html);
 		}
 	}
 });

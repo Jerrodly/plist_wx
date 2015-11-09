@@ -5,21 +5,16 @@ var Common = require("./common.js");
 var common = new Common();
 var Api = require("./api.js");
 var api = new Api();
-var UI = require("./ui.update.js");
+var UI = require("./list.ui.update.js");
 var ui = new UI();
 var Queryor = RichBase.extend({
 	statics : {},
-	cacheData : null,
+	cacheData : {},
 	currentPage : 0,
 	totalPage : 0,
+	fetchData_loading : false,
 	init : function(opt){
 		this.filter = opt && opt.filter ? opt.filter : null;
-	},
-	getFilterParams : function(){
-		var params = (this.filter && this.filter.getFilterParams) ? this.filter.getFilterParams() : {};
-		var keyword = common.getKeyword();
-		if(keyword) params["title"] = keyword;
-		return params;
 	},
 	serializeParams : function(paramsObj){
 		var filterParams = paramsObj;
@@ -30,12 +25,15 @@ var Queryor = RichBase.extend({
 		if(params) params = params.substring(1);
 		return params;
 	},
-	refresh : function(){
+	refresh : function(filterData){
 		var that = this;
 		var cacheData = this.cacheData;
-		var params = this.getFilterParams();
+		var params = filterData || {};
+		var keyword = common.getKeyword();
+		if(keyword) params["title"] = keyword;
 		var paramsStr = this.serializeParams(params);
 		var cache = cacheData[paramsStr];
+		if(this.fetchData_loading) return false;
 		if(cache){ //走缓存
 			this.currentPage = cache.page;
 			this.totalPage = cache.total;
@@ -45,9 +43,11 @@ var Queryor = RichBase.extend({
 				page : 1,
 				type : common.getPtype(),
 				loading : function(){
+					that.fetchData_loading = true;
 					ui.update(null,"refresh.loading");
 				},
 				removeLoading : function(){
+					that.fetchData_loading = false;
 					ui.update(null,"refresh.removeLoading");
 					that.currentPage = 0;
 					that.totalPage = 0;
@@ -83,20 +83,25 @@ var Queryor = RichBase.extend({
 			api.fetchData(fetchParams);
 		}
 	},
-	getMore : function(){
+	getMore : function(filterData){
 		var that = this;
 		var cacheData = this.cacheData;
 		var currentPage = this.currentPage;
 		var totalPage = this.totalPage;
-		if((currentPage==totalPage==0) || (currentPage>=totalPage)) return false;
-		var params = this.getFilterParams();
+		if(this.fetchData_loading) return false;
+		if((currentPage==totalPage) || (currentPage==0) || (totalPage==0) || (currentPage>=totalPage)) return false;
+		var params = filterData || {};
+		var keyword = common.getKeyword();
+		if(keyword) params["title"] = keyword;
 		var fetchParams = {
 			page : currentPage+1,
 			type : common.getPtype(),
 			loading : function(){
+				that.fetchData_loading = true;
 				ui.update(null,"getMore.loading");
 			},
 			removeLoading : function(){
+				that.fetchData_loading = false;
 				ui.update(null,"getMore.removeLoading");
 				that.currentPage = 0;
 				that.totalPage = 0;

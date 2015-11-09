@@ -54,172 +54,17 @@
 	/**
 	 * Created by Administrator on 15-11-5.
 	 */
-	var Queryor = __webpack_require__(2);
-	var queryor = null;
+	var List = __webpack_require__(6);
+	var list = null;
 	var Main = RichBase.extend({
 		init : function(){
-			this.ListContainer = new PFT.ListContainer({
-				container : $(window),
-				distanceToBottom : 0
-			});
-			this.ListContainer.on("scrollAtBottom",function(data){
-				queryor.getMore();
-			})
-			if(filter){
-				queryor = new Queryor({filter:filter});
-			}else{
-				queryor = new Queryor();
-			}
-			queryor.refresh();
+			list = new List();
 		}
-	});
+	})
+	$(function(){ new Main()});
 
 /***/ },
-/* 2 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Created by Administrator on 15-11-6.
-	 */
-	var Common = __webpack_require__(3);
-	var common = new Common();
-	var Api = __webpack_require__(4);
-	var api = new Api();
-	var UI = __webpack_require__(5);
-	var ui = new UI();
-	var Queryor = RichBase.extend({
-		statics : {},
-		cacheData : null,
-		currentPage : 0,
-		totalPage : 0,
-		init : function(opt){
-			this.filter = opt && opt.filter ? opt.filter : null;
-		},
-		getFilterParams : function(){
-			var params = (this.filter && this.filter.getFilterParams) ? this.filter.getFilterParams() : {};
-			var keyword = common.getKeyword();
-			if(keyword) params["title"] = keyword;
-			return params;
-		},
-		serializeParams : function(paramsObj){
-			var filterParams = paramsObj;
-			var params = "";
-			for(var i in filterParams){
-				params += ("&"+i+"="+filterParams[i])
-			}
-			if(params) params = params.substring(1);
-			return params;
-		},
-		refresh : function(){
-			var that = this;
-			var cacheData = this.cacheData;
-			var params = this.getFilterParams();
-			var paramsStr = this.serializeParams(params);
-			var cache = cacheData[paramsStr];
-			if(cache){ //走缓存
-				this.currentPage = cache.page;
-				this.totalPage = cache.total;
-				ui.update(cache.list,"refresh.success");
-			}else{ //请求数据
-				var fetchParams = {
-					page : 1,
-					type : common.getPtype(),
-					loading : function(){
-						ui.update(null,"refresh.loading");
-					},
-					removeLoading : function(){
-						ui.update(null,"refresh.removeLoading");
-						that.currentPage = 0;
-						that.totalPage = 0;
-					},
-					success : function(res){
-						var list = res.list;
-						var page = res.page;
-						var total = res.total;
-						that.currentPage = page;
-						that.totalPage = total;
-						cacheData[paramsStr] = res;
-						ui.update(list,"refresh.success");
-					},
-					empty : function(res){
-						var page = res.page;
-						var total = res.total;
-						that.currentPage = page;
-						that.totalPage = total;
-						cacheData[paramsStr] = res;
-						ui.update(res,"refresh.empty");
-					},
-					fail : function(res){
-						ui.update(res,"refresh.fail");
-					},
-					timeout : function(res){
-						ui.update(res,"refresh.timeout");
-					},
-					serverError : function(res){
-						ui.update(res,"refresh.serverError");
-					}
-				};
-				for(var i in params) fetchParams[i] = params[i];
-				api.fetchData(fetchParams);
-			}
-		},
-		getMore : function(){
-			var that = this;
-			var cacheData = this.cacheData;
-			var currentPage = this.currentPage;
-			var totalPage = this.totalPage;
-			if((currentPage==totalPage==0) || (currentPage>=totalPage)) return false;
-			var params = this.getFilterParams();
-			var fetchParams = {
-				page : currentPage+1,
-				type : common.getPtype(),
-				loading : function(){
-					ui.update(null,"getMore.loading");
-				},
-				removeLoading : function(){
-					ui.update(null,"getMore.removeLoading");
-					that.currentPage = 0;
-					that.totalPage = 0;
-				},
-				success : function(res){
-					var list = res.list;
-					var page = res.page;
-					var total = res.total;
-					var paramsStr = that.serializeParams(params);
-					that.currentPage = page;
-					that.totalPage = total;
-					cacheData[paramsStr]["page"] = page;
-					cacheData[paramsStr]["total"] = total;
-					for(var i in list){
-						cacheData[paramsStr]["list"].push(list[i]);
-					}
-					ui.update(list,"getMore.success");
-				},
-				empty : function(res){
-					that.currentPage = page;
-					that.totalPage = total;
-					var paramsStr = that.serializeParams(params);
-					cacheData[paramsStr]["page"] = page;
-					cacheData[paramsStr]["total"] = total;
-					ui.update(list,"getMore.success");
-				},
-				fail : function(res){
-					ui.update(null,"getMore.fail");
-				},
-				timeout : function(res){
-					ui.update(null,"getMore.timeout");
-				},
-				serverError : function(res){
-					ui.update(null,"getMore.serverError");
-				}
-			};
-			for(var i in params) fetchParams[i] = params[i];
-			api.fetchData(fetchParams);
-		}
-	});
-	module.exports = Queryor;
-
-/***/ },
+/* 2 */,
 /* 3 */
 /***/ function(module, exports) {
 
@@ -228,10 +73,14 @@
 	 */
 	var Common = RichBase.extend({
 		getKeyword : function(){
-			return "";
+			return $("#searchInp").val();
 		},
 		getPtype : function(){
 			return "A";
+		},
+		switchPage : function(pageId){
+			if(typeof pageId==="undefined") return false;
+			$(pageId).addClass("current").siblings().removeClass("current");
 		}
 	});
 	module.exports = Common;
@@ -261,7 +110,7 @@
 			var defaults = {
 				action : "product_list",
 				page : 1,
-				url : statics.url,
+				url : statics.api,
 				size : statics.pageSize,
 				type : statics.type,
 				ttimeout : statics.ttimeout,
@@ -308,7 +157,241 @@
 	module.exports = Api;
 
 /***/ },
-/* 5 */
+/* 5 */,
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Created by Administrator on 15-11-9.
+	 */
+	var Queryor = __webpack_require__(7);
+	var queryor = null;
+	var Topic = __webpack_require__(9);
+	var topic = null;
+	var Common = __webpack_require__(3);
+	var common = new Common();
+	var List = RichBase.extend({
+		_scrollTop : null,
+		_interval : null,
+		init : function(){
+			var that = this;
+			var listFilter = window.listFilter || null;
+			this.ListContainer = new PFT.ListContainer({
+				container : $(window),
+				distanceToBottom : 0
+			});
+			this.ListContainer.on("scroll",function(data){
+				if(!listFilter) return false;
+				var scrollTop = data.scrollTop;
+				if(that._scrollTop==null) return that._scrollTop=scrollTop;
+				if(scrollTop>that._scrollTop){
+					listFilter.hide();
+				}else{
+					listFilter.show();
+				}
+				that._scrollTop = scrollTop;
+			})
+			this.ListContainer.on("scrollAtBottom",function(data){
+				queryor.getMore(that.getFilter());
+			})
+			listFilter && listFilter.on("filter.change",function(data){
+				queryor.refresh(data);
+			});
+			$("#searchInp").on("input",function(e){
+				that.onSearchInpChange(e);
+			})
+			this.initRouter();
+			queryor = new Queryor();
+			topic = new Topic();
+			topic.on("topic.change",function(topic){
+				if(listFilter){
+					if(topic!=="不限"){
+						listFilter.setFilterItem($("#switchTopicBtn"),topic,topic);
+					}else{
+						listFilter.setFilterItem($("#switchTopicBtn"),"",topic);
+					}
+					queryor.refresh(that.getFilter());
+				}
+			})
+			queryor.refresh(this.getFilter());
+		},
+		initRouter : function(){
+			this.router = new PFT.Router({
+				default : function(data){
+					common.switchPage("#listPage");
+				},
+				topic : function(data){
+					topic.show({active:data.active || ""})
+				}
+			})
+		},
+		onSearchInpChange : function(e){
+			var filterParams = this.getFilter();
+			clearTimeout(this._interval);
+			this._interval = setTimeout(function(){
+				queryor.refresh(filterParams);
+			},200)
+		},
+		getFilter : function(){
+			var listFilter = window.listFilter || null;
+			if(!listFilter) return {};
+			return listFilter.getFilterParams();
+		}
+	});
+	module.exports = List;
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Created by Administrator on 15-11-6.
+	 */
+	var Common = __webpack_require__(3);
+	var common = new Common();
+	var Api = __webpack_require__(4);
+	var api = new Api();
+	var UI = __webpack_require__(8);
+	var ui = new UI();
+	var Queryor = RichBase.extend({
+		statics : {},
+		cacheData : {},
+		currentPage : 0,
+		totalPage : 0,
+		fetchData_loading : false,
+		init : function(opt){
+			this.filter = opt && opt.filter ? opt.filter : null;
+		},
+		serializeParams : function(paramsObj){
+			var filterParams = paramsObj;
+			var params = "";
+			for(var i in filterParams){
+				params += ("&"+i+"="+filterParams[i])
+			}
+			if(params) params = params.substring(1);
+			return params;
+		},
+		refresh : function(filterData){
+			var that = this;
+			var cacheData = this.cacheData;
+			var params = filterData || {};
+			var keyword = common.getKeyword();
+			if(keyword) params["title"] = keyword;
+			var paramsStr = this.serializeParams(params);
+			var cache = cacheData[paramsStr];
+			if(this.fetchData_loading) return false;
+			if(cache){ //走缓存
+				this.currentPage = cache.page;
+				this.totalPage = cache.total;
+				ui.update(cache.list,"refresh.success");
+			}else{ //请求数据
+				var fetchParams = {
+					page : 1,
+					type : common.getPtype(),
+					loading : function(){
+						that.fetchData_loading = true;
+						ui.update(null,"refresh.loading");
+					},
+					removeLoading : function(){
+						that.fetchData_loading = false;
+						ui.update(null,"refresh.removeLoading");
+						that.currentPage = 0;
+						that.totalPage = 0;
+					},
+					success : function(res){
+						var list = res.list;
+						var page = res.page;
+						var total = res.total;
+						that.currentPage = page;
+						that.totalPage = total;
+						cacheData[paramsStr] = res;
+						ui.update(list,"refresh.success");
+					},
+					empty : function(res){
+						var page = res.page;
+						var total = res.total;
+						that.currentPage = page;
+						that.totalPage = total;
+						cacheData[paramsStr] = res;
+						ui.update(res,"refresh.empty");
+					},
+					fail : function(res){
+						ui.update(res,"refresh.fail");
+					},
+					timeout : function(res){
+						ui.update(res,"refresh.timeout");
+					},
+					serverError : function(res){
+						ui.update(res,"refresh.serverError");
+					}
+				};
+				for(var i in params) fetchParams[i] = params[i];
+				api.fetchData(fetchParams);
+			}
+		},
+		getMore : function(filterData){
+			var that = this;
+			var cacheData = this.cacheData;
+			var currentPage = this.currentPage;
+			var totalPage = this.totalPage;
+			if(this.fetchData_loading) return false;
+			if((currentPage==totalPage) || (currentPage==0) || (totalPage==0) || (currentPage>=totalPage)) return false;
+			var params = filterData || {};
+			var keyword = common.getKeyword();
+			if(keyword) params["title"] = keyword;
+			var fetchParams = {
+				page : currentPage+1,
+				type : common.getPtype(),
+				loading : function(){
+					that.fetchData_loading = true;
+					ui.update(null,"getMore.loading");
+				},
+				removeLoading : function(){
+					that.fetchData_loading = false;
+					ui.update(null,"getMore.removeLoading");
+					that.currentPage = 0;
+					that.totalPage = 0;
+				},
+				success : function(res){
+					var list = res.list;
+					var page = res.page;
+					var total = res.total;
+					var paramsStr = that.serializeParams(params);
+					that.currentPage = page;
+					that.totalPage = total;
+					cacheData[paramsStr]["page"] = page;
+					cacheData[paramsStr]["total"] = total;
+					for(var i in list){
+						cacheData[paramsStr]["list"].push(list[i]);
+					}
+					ui.update(list,"getMore.success");
+				},
+				empty : function(res){
+					that.currentPage = page;
+					that.totalPage = total;
+					var paramsStr = that.serializeParams(params);
+					cacheData[paramsStr]["page"] = page;
+					cacheData[paramsStr]["total"] = total;
+					ui.update(list,"getMore.success");
+				},
+				fail : function(res){
+					ui.update(null,"getMore.fail");
+				},
+				timeout : function(res){
+					ui.update(null,"getMore.timeout");
+				},
+				serverError : function(res){
+					ui.update(null,"getMore.serverError");
+				}
+			};
+			for(var i in params) fetchParams[i] = params[i];
+			api.fetchData(fetchParams);
+		}
+	});
+	module.exports = Queryor;
+
+/***/ },
+/* 8 */
 /***/ function(module, exports) {
 
 	/**
@@ -374,14 +457,92 @@
 					html = '<li id="ajax_status_li" class="sta refresh serverError"><i class="iconfont">&#xe669;</i><span class="t">请求出错,请稍后重试</span></li>';
 					break;
 			}
-			if(type.indexOf("refresh")){
-				list.html(html);
+			if(type.indexOf("refresh")>=0){
+				listUl.html(html);
 			}else{
-				list.append(html);
+				listUl.append(html);
 			}
 		}
 	});
 	module.exports = UI;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Created by Administrator on 15-11-9.
+	 */
+	var Common = __webpack_require__(3);
+	var common = new Common();
+	var Topic = RichBase.extend({
+		isInit : false,
+		init : function(){
+			var that = this;
+			this.container = $("#topicPage");
+			this.listUl = $("#topicListUl");
+			this.container.on("tap",".topicItem",function(e){
+				var target = $(e.currentTarget);
+				target.addClass("active").siblings().removeClass("active");
+			})
+			$("#certainTopicBtn").on("tap",function(e){
+				var tarBtn = $(this);
+				var topic_orign = tarBtn.attr("data-topic");
+				var topic_new = that.listUl.children(".active").find(".t").text();
+				window.history.back();
+				if(topic_new && topic_new!==topic_orign){
+					tarBtn.attr("data-topic",topic_new);
+					that.fire("topic.change",topic_new);
+				}
+			})
+		},
+		show : function(opt){
+			common.switchPage("#topicPage");
+			var active = opt.active;
+			if(!this.isInit){
+				this.buildList();
+				this.isInit = true;
+			}
+			if(!active) return false;
+			setTimeout(function(){
+				$("#topicListUl").children().each(function(){
+					var item = $(this);
+					var text = item.text();
+					if(text==active) item.addClass("active").siblings().removeClass("active");
+				})
+			},100)
+		},
+		buildList : function(){
+			var listUl = this.listUl;
+			PFT.Topic.get({
+				loading : function(){
+					listUl.html('<li class="sta refresh loading"><i class="iconfont loading">&#xe644;</i><span class="t">数据加载中...</span></li>')
+				},
+				removeLoading : function(){ listUl.html("")},
+				success : function(topics){
+					var html = '<li class="topicItem all"><span class="t">不限</span><i class="iconfont">&#xe6b6;</i></li>';
+					for(var i in topics){
+						var topic = topics[i];
+						html += '<li class="topicItem"><span class="t">'+topic+'</span><i class="iconfont">&#xe6b6;</i></li>';
+					}
+					listUl.html(html);
+				},
+				empty : function(res){
+					listUl.html('<li class="sta refresh empty"><i class="iconfont">&#xe669;</i><span class="t">暂无主题分类...</span></li>')
+				},
+				fail : function(res){
+					listUl.html('<li class="sta refresh fail"><i class="iconfont">&#xe669;</i><span class="t">请求主题出错...</span></li>')
+				},
+				timeout : function(res){
+					listUl.html('<li class="sta refresh fail"><i class="iconfont">&#xe669;</i><span class="t">请求主题超时，请稍后重试...</span></li>')
+				},
+				serverError : function(res){
+					listUl.html('<li class="sta refresh fail"><i class="iconfont">&#xe669;</i><span class="t">请求主题出错，请稍后重试...</span></li>')
+				}
+			})
+		}
+	});
+	module.exports = Topic;
 
 /***/ }
 /******/ ]);

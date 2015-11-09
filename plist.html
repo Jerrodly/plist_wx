@@ -1,181 +1,53 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+<style type="text/css">
+    body{ background-color:#f1f2f6}
+    .page{ position:relative; display:none}
+    .page.current{ display:block}
+    .fixHead{ position:fixed; z-index:5;}
+    .fixHead > .con{ position:relative; height:100%; overflow:hidden; font-size:14px; color:#fff; text-align:center; line-height:44px;}
+    .fixHead.plist > .con .searchIcon{ position:absolute; top:0px; left:8px; color:#8c8c8c;}
+    .fixHead .searchBtn{ display:block; width:100%; height:31px; line-height:31px; margin-top:7px; background:#b6e1f4; text-align:center; border:0 none; border-radius:3px; color:#049ad5}
+    .fixHead .searchBtn .t{ font-size:1rem; vertical-align:middle}
+    .fixHead .searchBtn .iconfont{ font-size:1rem; vertical-align:middle; margin-right:4px;}
+    .fixHead .btn.certainTopicBtn{ width:50px; right:0; color:#fff}
+    .listUl.plist{ margin:54px 10px 40px}
+    #listUl .sta{ width:100%; height:200px; line-height:200px; text-align:center; background-color:#fff}
+    #listUl .sta .iconfont{vertical-align:middle; margin-right:2px;}
+    #listUl .sta .t{vertical-align:middle;}
+    #searchInp{ display:block; width:100%; height:32px; margin-top:6px; padding:6px 0 6px 28px; background-color:#b6e1f4; border:0 none; border-radius:3px; -webkit-box-sizing:border-box; box-sizing:border-box;}
+    #searchInp:focus{ background-color:#fff; color:#F07845}
 
-
-<script type="text/javascript">
-    var J = {
-        $namespace : function(name){
-            if(!name) return false;
-            name = name.split(".");
-            var len = name.length;
-            var ns = window;
-            for(var i= 0; i<len; i++){
-                var n = name[i];
-                ns[n] = ns[n] || {};
-                ns = ns[n];
-            }
-            return ns;
-        },
-        Class:function(){
-            var length = arguments.length;
-            var option = arguments[length-1];
-            option.init = option.init || function(){};
-
-            if(length === 2){
-                var superClass = arguments[0].extend;
-
-                var tempClass = function() {};
-                tempClass.prototype = superClass.prototype;
-
-                var subClass = function() {
-                    return new subClass.prototype._init(arguments);
-                }
-
-                subClass.superClass = superClass.prototype;
-                subClass.callSuper = function(context,func){
-                    var slice = Array.prototype.slice;
-                    var a = slice.call(arguments, 2);
-                    var func = subClass.superClass[func];
-
-                    if(func){
-                        func.apply(context, a.concat(slice.call(arguments)));
-                    }
-                };
-                subClass.prototype = new tempClass();
-                subClass.prototype.constructor = subClass;
-
-                J.extend(subClass.prototype, option);
-
-                subClass.prototype._init = function(args){
-                    this.init.apply(this, args);
-                };
-                subClass.prototype._init.prototype = subClass.prototype;
-                return subClass;
-
-            }else if(length === 1){
-                var newClass = function() {
-                    return new newClass.prototype._init(arguments);
-                }
-                newClass.prototype = option;
-                newClass.prototype._init = function(arg){
-                    this.init.apply(this,arg);
-                };
-                newClass.prototype.constructor = newClass;
-                newClass.prototype._init.prototype = newClass.prototype;
-                return newClass;
-            }
-        },
-        extend:function(destination,source){
-            for(var n in source){
-                if(source.hasOwnProperty(n)){
-                    destination[n]=source[n];
-                }
-            }
-            return destination;
-        },
-        bind:function(func, context, var_args) {
-            var slice = [].slice;
-            var a = slice.call(arguments, 2);
-            return function(){
-                return func.apply(context, a.concat(slice.call(arguments)));
-            };
-        },
-        $package : function(ns,func){
-            var target;
-            if(typeof ns == "function"){
-                func = ns;
-                target = window;
-                func.call(target,this);
-            }
-            else if(Object.prototype.toString.call(ns)=="[object Array]"){
-                var nsArr = [this];
-                for(var i in ns){
-                    nsArr.push(this.$namespace(ns[i]));
-                }
-                func.apply(this,nsArr);
-            }
-            else if(typeof ns == "object"){
-                target  = ns;
-                func.call(target,this);
-            }
-        }
-    };
-
-//    window["PFT"] = { name:"PFT"};
-//    window["PFT_WX"] = { name:"PFT_WX"};
-//    window["PFT"]["Util"] = {name:"Util"};
-
-
-//    J.$package(["PFT","PFT.Util"],function(J,PFT,Util){
-//        console.log(J);
-//        console.log(PFT);
-//        console.log(Util);
-//    });
-
-    var M = J.Class({
-        init : function(opt){
-            console.log("init")
-            this.name = opt.name;
-            this.age = opt.age;
-        },
-        type : "MEN",
-        getName : function(){
-            return this.name;
-        },
-        setName : function(name){
-            this.name = name;
-        },
-        getAge : function(){
-            return this.age;
-        },
-        setAge : function(age){
-            this.age = age;
-        }
-    });
-    var N = J.Class({extend:M},{
-        init : function(opt){
-            this.name = opt.name;
-            this.age = opt.age;
-        },
-        getType : function(){
-            return this.type;
-        }
-    });
-    var m = new M({
-        name : "huangzy",
-        age : 10
-    });
-    var n = new N({
-        name : "huangzhiyang",
-        age : 166
-    });
-//    console.log(m.getName())
-//    console.log(n.getName());
-//    console.log(n.getAge());
-//    console.log(n.getType());
-
-
-
-
-
-//    J.$package(function(J){
-//        console.log(J);
-//    });
-//    J.$package({a:1},function(J){
-//        console.log(this);
-//        console.log(J);
-//    });
-
-
-
-//    console.log($namespace("PFT"));
-//    console.log($namespace("PFT.Util"));
-//    console.log($namespace("PFT.Util.Help"));
-//    console.log(window.PFT)
-</script>
-</body>
-</html>
+    .listUl.topic{ margin:44px 0 50px; background:#fff; }
+    .topicItem{ height:48px; line-height:48px; padding:0 15px 0 20px; overflow:hidden; border-bottom:1px solid #dfdfdf}
+    .topicItem .t{ float:left;}
+    .topicItem .iconfont{ float:right; display:none}
+    .topicItem.active .iconfont{ display:inline-block; color:#F07845}
+    .topicItem.active .t{ color:#F07845}
+</style>
+<div id="bodyWrapper" class="bodyWrapper">
+    <div id="listPage" class="page current list">
+        <div class="ui-fixHead plist fixHead">
+            <div class="con">
+                <i class="iconfont searchIcon">&#xe633;</i>
+                <input type="text" name="" id="searchInp" class="searchInp" placeholder="搜索产品 / 景区"/>
+            </div>
+            <a class="btn goback" href="javascript:window.history.go(-1)"><i class="iconfont">&#xe60c;</i></a>
+            <a class="btn user" ontouchend="javascript:window.location.href='usercenter.html'"><i class="iconfont">&#xe682;</i></a>
+        </div>
+        <ul id="listUl" class="listUl plist"></ul>
+        <?php include "/var/www/html/wx/modules/plist/tpl/filter.html"; ?>
+    </div>
+    <div id="topicPage" class="topicPage page ">
+        <div class="ui-fixHead fixHead topic">
+            <div class="con">请选择主题</div>
+            <a class="btn goback" href="javascript:window.history.go(-1)"><i class="iconfont">&#xe60c;</i></a>
+            <a id="certainTopicBtn" class="btn certainTopicBtn" data-topic="" href="javascript:void(0)">确定</a>
+        </div>
+        <ul id="topicListUl" class="listUl topic topicListUl"></ul>
+    </div>
+    <?php include "/var/www/html/wx/modules/city_query/city_query.html"; ?>
+    <div id="detailPage" class="page detail"></div>
+</div>
+<?php include "/var/www/html/wx/modules/plist/tpl/tpl.html"; ?>
+<script type="text/javascript" src="http://wx.12301.cc/modules/plist/js/modules/filter.js?t=<?=time();?>"></script>
+<script type="text/javascript" src="http://wx.12301.cc/public/js/common/listManager.js"></script>
+<script type="text/javascript" src="http://wx.12301.cc/modules/plist/js/build/plist.all.js"></script>
