@@ -81,13 +81,14 @@
 		_interval : null,
 		init : function(){
 			var that = this;
-			var listFilter = window.listFilter || null;
+			var listFilter = this.listFilter = window.listFilter || null;
 			this.ListContainer = new PFT.ListContainer({
 				container : $(window),
 				distanceToBottom : 0
 			});
 			this.ListContainer.on("scroll",function(data){
 				if(!listFilter) return false;
+				if($("#ptypeSelector").css("display")=="block") return false;
 				var scrollTop = data.scrollTop;
 				if(that._scrollTop==null) return that._scrollTop=scrollTop;
 				if(scrollTop>that._scrollTop){
@@ -98,16 +99,16 @@
 				that._scrollTop = scrollTop;
 			})
 			this.ListContainer.on("scrollAtBottom",function(data){
+				if($("#ptypeSelector").css("display")=="block") return false;
 				queryor.getMore(that.getFilter());
 			})
-	//		listFilter && listFilter.on("filter.change",function(data){
-	//			queryor.refresh(data);
-	//		});
-			$("#searchInp").on("input",function(e){
+			$("#searchInp_list").on("input",function(e){
 				that.onSearchInpChange(e);
 			})
 			this.initRouter();
+			//查询模块
 			queryor = new Queryor();
+			//主题筛选
 			topic = new Topic();
 			topic.on("topic.change",function(data){
 				if(!listFilter) return false;
@@ -116,23 +117,40 @@
 				listFilter.setFilterItem("#switchTopicBtn",val,text);
 				queryor.refresh(that.getFilter());
 			})
+			//城市筛选
+			listFilter && listFilter.on("city.switch",function(data){
+				queryor.refresh(that.getFilter());
+			})
+			//产品类型ptype筛选
+			listFilter && listFilter.on("ptype.switch",function(data){
+				queryor.refresh(that.getFilter());
+			})
+			//初始化页面
 			queryor.refresh(this.getFilter());
 		},
 		initRouter : function(){
+			var listFilter = this.listFilter || null;
 			this.router = new PFT.Router({
 				default : function(data){
 					common.switchPage("#listPage");
+					listFilter && listFilter.closePtypeSelector();
 				},
 				topic : function(data){
 					topic.show({active:data.active || ""})
+				},
+				city : function(data){
+					common.switchPage("#cityQueryPage");
+				},
+				ptype : function(data){
+					listFilter && listFilter.showPtypeSelector(common.getPtype());
 				}
 			})
 		},
 		onSearchInpChange : function(e){
-			var filterParams = this.getFilter();
+			var that = this;
 			clearTimeout(this._interval);
 			this._interval = setTimeout(function(){
-				queryor.refresh(filterParams);
+				queryor.refresh(that.getFilter());
 			},200)
 		},
 		getFilter : function(){
@@ -194,7 +212,6 @@
 			}else{ //请求数据
 				var fetchParams = {
 					page : 1,
-					type : common.getPtype(),
 					loading : function(){
 						that.fetchData_loading = true;
 						ui.update(null,"refresh.loading");
@@ -248,7 +265,6 @@
 			if(keyword) params["title"] = keyword;
 			var fetchParams = {
 				page : currentPage+1,
-				type : common.getPtype(),
 				loading : function(){
 					that.fetchData_loading = true;
 					ui.update(null,"getMore.loading");
@@ -306,10 +322,18 @@
 	 */
 	var Common = RichBase.extend({
 		getKeyword : function(){
-			return $("#searchInp").val();
+			return $("#searchInp_list").val();
 		},
 		getPtype : function(){
 			return "A";
+		},
+		getPtype : function(){
+			return{
+				"A" : "门票",
+				"C" : "酒店",
+				"F" : "套票",
+				"H" : "演出"
+			};
 		},
 		switchPage : function(pageId){
 			if(typeof pageId==="undefined") return false;

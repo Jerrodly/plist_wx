@@ -3,10 +3,18 @@
  */
 var Common = RichBase.extend({
 	getKeyword : function(){
-		return $("#searchInp").val();
+		return $("#searchInp_list").val();
 	},
 	getPtype : function(){
 		return "A";
+	},
+	getPtype : function(){
+		return{
+			"A" : "门票",
+			"C" : "酒店",
+			"F" : "套票",
+			"H" : "演出"
+		};
 	},
 	switchPage : function(pageId){
 		if(typeof pageId==="undefined") return false;

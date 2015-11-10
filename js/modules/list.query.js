@@ -45,7 +45,6 @@ var Queryor = RichBase.extend({
 		}else{ //请求数据
 			var fetchParams = {
 				page : 1,
-				type : common.getPtype(),
 				loading : function(){
 					that.fetchData_loading = true;
 					ui.update(null,"refresh.loading");
@@ -99,7 +98,6 @@ var Queryor = RichBase.extend({
 		if(keyword) params["title"] = keyword;
 		var fetchParams = {
 			page : currentPage+1,
-			type : common.getPtype(),
 			loading : function(){
 				that.fetchData_loading = true;
 				ui.update(null,"getMore.loading");

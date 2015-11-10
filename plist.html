@@ -13,8 +13,8 @@
     #listUl .sta{ width:100%; height:200px; line-height:200px; text-align:center; background-color:#fff}
     #listUl .sta .iconfont{vertical-align:middle; margin-right:2px;}
     #listUl .sta .t{vertical-align:middle;}
-    #searchInp{ display:block; width:100%; height:32px; margin-top:6px; padding:6px 0 6px 28px; background-color:#b6e1f4; border:0 none; border-radius:3px; -webkit-box-sizing:border-box; box-sizing:border-box;}
-    #searchInp:focus{ background-color:#fff; color:#F07845}
+    #searchInp_list{ display:block; width:100%; height:32px; margin-top:6px; padding:6px 0 6px 28px; background-color:#b6e1f4; border:0 none; border-radius:3px; -webkit-box-sizing:border-box; box-sizing:border-box;}
+    #searchInp_list:focus{ background-color:#fff; color:#F07845}
 
     .listUl.topic{ margin:44px 0 50px; background:#fff; }
     .topicItem{ height:48px; line-height:48px; padding:0 15px 0 20px; overflow:hidden; border-bottom:1px solid #dfdfdf}
@@ -22,13 +22,16 @@
     .topicItem .iconfont{ float:right; display:none}
     .topicItem.active .iconfont{ display:inline-block; color:#F07845}
     .topicItem.active .t{ color:#F07845}
+
+
+
 </style>
 <div id="bodyWrapper" class="bodyWrapper">
     <div id="listPage" class="page current list">
         <div class="ui-fixHead plist fixHead">
             <div class="con">
                 <i class="iconfont searchIcon">&#xe633;</i>
-                <input type="text" name="" id="searchInp" class="searchInp" placeholder="搜索产品 / 景区"/>
+                <input type="text" name="" id="searchInp_list" class="searchInp searchInp_list list" placeholder="搜索产品 / 景区"/>
             </div>
             <a class="btn goback" href="javascript:window.history.go(-1)"><i class="iconfont">&#xe60c;</i></a>
             <a class="btn user" ontouchend="javascript:window.location.href='usercenter.html'"><i class="iconfont">&#xe682;</i></a>

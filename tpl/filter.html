@@ -1,4 +1,20 @@
-<?php $topic = $_GET["topic"]; ?>
+<?php
+    $topic = $_GET["topic"];
+    $topic_txt = $topic;
+    if(empty($topic)){
+        $topic="";
+        $topic_txt="不限";
+    }
+    $ptype_text_arr = array(
+        "A" => "门票",
+        "C" => "酒店",
+        "F" => "套票",
+        "H" => "演出"
+    );
+    $ptype = $_GET["type"];
+    if(empty($ptype)) $ptype="A";
+    $ptype_text = $ptype_text_arr[$ptype];
+?>
 <style type="text/css">
     .ui-filterBar{ height:40px;}
     .ui-filterBar .ui-filterItem{ line-height:40px;}
@@ -7,11 +23,28 @@
 </style>
 <div style="position:fixed" data-ptype="<?=$_GET['ptype']?>" id="filterBar" class="filterBar ui-filterBar">
     <div class="con ui-flex">
-        <a id="switchTopicBtn" style="display:block; color:#fff" href="#topic?active=<?=$topic?>" class="ui-filterItem ui-filterItem-tap ui-filterItem-topic ui-flex-box topic" data-param="topic" data-show="<?=$topic?>" data-val="<?=$topic?>">
-            <i class="iconfont">&#xe6a7;</i><span class="t"><?=$topic?></span>
+        <a id="switchTopicBtn" data-param="topic" data-show="<?=$topic_txt?>" data-val="<?=$topic?>" href="#topic?active=<?=$topic?>" style="display:block; color:#fff" class="ui-filterItem ui-filterItem-tap ui-filterItem-topic ui-flex-box topic">
+            <i class="iconfont">&#xe6a7;</i><span class="t"><?=$topic_txt?></span>
         </a>
-        <div class="ui-filterItem ui-flex-box ui-filterItem-city city" data-param="area" data-val="">
-            <a id="" style="display:block; height:100%; color:#fff" href="#openAllCity"><i class="iconfont">&#xe603;</i><span class="t"></span></a>
-        </div>
+        <a id="switchPtypeBtn" href="#ptype" class="ui-filterItem ui-flex-box ui-filterItem-ptype ptype" data-param="type" data-val="<?=$ptype?>" data-show="<?=$ptype_text?>" style="color:#fff">
+            <i style="top:1px" class="iconfont">&#xe6ab;</i><span class="t"><?=$ptype_text?></span>
+        </a>
+        <a id="switchCityBtn" href="#city" class="ui-filterItem ui-flex-box ui-filterItem-city city" data-param="area" data-val="" data-show="不限" style="color:#fff">
+            <i style="top:1px" class="iconfont">&#xe603;</i><span class="t">不限</span>
+        </a>
     </div>
+</div>
+<style type="text/css">
+    .ptypeSelector{ display:none; position:fixed; z-index:2; left:0; right:0; bottom:-260px; height:260px; background:#fff; border-top:3px solid #F07845; overflow:auto; -webkit-overflow-scrolling:touch; -webkit-transition:all 0.3s; transition:all 0.3s;}
+    .ptypeSelector.show{ display:block; bottom:40px;}
+    .ptypeSelector .ptypeLi{ height:50px; line-height:50px; text-align:center; font-size:16px; border-bottom:1px solid #dbdbdb}
+    .ptypeSelector .ptypeLi:last-child{ border-bottom:0 none}
+    .ptypeSelector .closeBtn{ position:absolute; right:5px; top:3px; z-index:5; display:block; width:32px; height:32px; line-height:32px; text-align:center; color:#333; background:#fff}
+    .ptypeSelector .closeBtn:active{ background:#dbdbdb;}
+    .ptypeSelector .closeBtn .iconfont{ font-size:22px;}
+    .ptypeSelector .typeUl{ margin-top:28px;}
+</style>
+<div id="ptypeSelector" class="ptypeSelector">
+    <a class="closeBtn" href="javascript:window.history.back()"><i class="iconfont">&#xe634;</i></a>
+    <ul class="typeUl"></ul>
 </div>
