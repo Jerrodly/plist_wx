@@ -16,11 +16,13 @@ var Topic = RichBase.extend({
 		$("#certainTopicBtn").on("tap",function(e){
 			var tarBtn = $(this);
 			var topic_orign = tarBtn.attr("data-topic");
-			var topic_new = that.listUl.children(".active").find(".t").text();
+			var topic_new = that.listUl.children(".active");
+			var topic_new_val = topic_new.attr("data-val");
+			var topic_new_text = topic_new.attr("data-text");
 			window.history.back();
-			if(topic_new && topic_new!==topic_orign){
-				tarBtn.attr("data-topic",topic_new);
-				that.fire("topic.change",topic_new);
+			if(topic_orign!==topic_new_val){
+				tarBtn.attr("data-topic",topic_new_val);
+				that.fire("topic.change",{val:topic_new_val,text:topic_new_text})
 			}
 		})
 	},
@@ -35,8 +37,8 @@ var Topic = RichBase.extend({
 		setTimeout(function(){
 			$("#topicListUl").children().each(function(){
 				var item = $(this);
-				var text = item.text();
-				if(text==active) item.addClass("active").siblings().removeClass("active");
+				var val = item.attr("data-val");
+				if(val==active) item.addClass("active").siblings().removeClass("active");
 			})
 		},100)
 	},
@@ -48,10 +50,10 @@ var Topic = RichBase.extend({
 			},
 			removeLoading : function(){ listUl.html("")},
 			success : function(topics){
-				var html = '<li class="topicItem all"><span class="t">不限</span><i class="iconfont">&#xe6b6;</i></li>';
+				var html = '<li class="topicItem all" data-val="" data-text="不限"><span class="t">不限</span><i class="iconfont">&#xe6b6;</i></li>';
 				for(var i in topics){
 					var topic = topics[i];
-					html += '<li class="topicItem"><span class="t">'+topic+'</span><i class="iconfont">&#xe6b6;</i></li>';
+					html += '<li class="topicItem" data-val="'+topic+'" data-text="'+topic+'"><span class="t">'+topic+'</span><i class="iconfont">&#xe6b6;</i></li>';
 				}
 				listUl.html(html);
 			},

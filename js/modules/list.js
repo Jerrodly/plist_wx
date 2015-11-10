@@ -31,24 +31,21 @@ var List = RichBase.extend({
 		this.ListContainer.on("scrollAtBottom",function(data){
 			queryor.getMore(that.getFilter());
 		})
-		listFilter && listFilter.on("filter.change",function(data){
-			queryor.refresh(data);
-		});
+//		listFilter && listFilter.on("filter.change",function(data){
+//			queryor.refresh(data);
+//		});
 		$("#searchInp").on("input",function(e){
 			that.onSearchInpChange(e);
 		})
 		this.initRouter();
 		queryor = new Queryor();
 		topic = new Topic();
-		topic.on("topic.change",function(topic){
-			if(listFilter){
-				if(topic!=="不限"){
-					listFilter.setFilterItem($("#switchTopicBtn"),topic,topic);
-				}else{
-					listFilter.setFilterItem($("#switchTopicBtn"),"",topic);
-				}
-				queryor.refresh(that.getFilter());
-			}
+		topic.on("topic.change",function(data){
+			if(!listFilter) return false;
+			var val = data.val;
+			var text = data.text;
+			listFilter.setFilterItem("#switchTopicBtn",val,text);
+			queryor.refresh(that.getFilter());
 		})
 		queryor.refresh(this.getFilter());
 	},

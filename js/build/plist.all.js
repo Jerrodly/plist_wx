@@ -54,7 +54,7 @@
 	/**
 	 * Created by Administrator on 15-11-5.
 	 */
-	var List = __webpack_require__(6);
+	var List = __webpack_require__(2);
 	var list = null;
 	var Main = RichBase.extend({
 		init : function(){
@@ -64,111 +64,17 @@
 	$(function(){ new Main()});
 
 /***/ },
-/* 2 */,
-/* 3 */
-/***/ function(module, exports) {
-
-	/**
-	 * Created by Administrator on 15-11-6.
-	 */
-	var Common = RichBase.extend({
-		getKeyword : function(){
-			return $("#searchInp").val();
-		},
-		getPtype : function(){
-			return "A";
-		},
-		switchPage : function(pageId){
-			if(typeof pageId==="undefined") return false;
-			$(pageId).addClass("current").siblings().removeClass("current");
-		}
-	});
-	module.exports = Common;
-
-/***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-	/**
-	 * Created by Administrator on 15-11-6.
-	 */
-	var fn = new Function;
-	var Api = RichBase.extend({
-		statics : {
-			defaults : {
-				api : "api/v0.0.3/order.php",
-				type : "A",
-				timeout : 10 * 1000,
-				pageSize : 10
-			}
-		},
-		init : function(){},
-		fetchData : function(opt){
-			var statics = this.statics.defaults;
-			var opt = opt || {};
-			var ajaxParam = {};
-			var defaults = {
-				action : "product_list",
-				page : 1,
-				url : statics.api,
-				size : statics.pageSize,
-				type : statics.type,
-				ttimeout : statics.ttimeout,
-				loading : fn,
-				removeLoading : fn,
-				success : fn,
-				empty : fn,
-				fail : fn,
-				timeout : fn,
-				serverError : fn
-			};
-			for(var i in defaults){
-				if(typeof opt[i]==="undefined") opt[i] = defaults[i];
-			}
-			for(var i in opt){
-				var val = opt[i];
-				if((typeof val!=="function") && (i!="url") && (i!="ttimeout")) ajaxParam[i] = val;
-			}
-			if(!ajaxParam["type"]) ajaxParam["type"] = statics.type;
-			PFT.Ajax({
-				url : opt.url,
-				type : "get",
-				dataType : "json",
-				data : ajaxParam,
-				ttimeout : opt.ttimeout,
-				loading : function(){ opt.loading()},
-				removeLoading : function(){ opt.removeLoading()},
-				timeout : function(res){ opt.timeout(res)},
-				serverError : function(res){ opt.serverError(res)}
-			},function(res){
-				var list = res.list;
-				if(list && ({}.toString.call(list)=="[object Array]")){
-					if(list.length){
-						opt.success(res);
-					}else{
-						opt.empty(res);
-					}
-				}else{
-					opt.fail(res);
-				}
-			})
-		}
-	});
-	module.exports = Api;
-
-/***/ },
-/* 5 */,
-/* 6 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Created by Administrator on 15-11-9.
 	 */
-	var Queryor = __webpack_require__(7);
+	var Queryor = __webpack_require__(3);
 	var queryor = null;
-	var Topic = __webpack_require__(9);
+	var Topic = __webpack_require__(7);
 	var topic = null;
-	var Common = __webpack_require__(3);
+	var Common = __webpack_require__(4);
 	var common = new Common();
 	var List = RichBase.extend({
 		_scrollTop : null,
@@ -194,24 +100,21 @@
 			this.ListContainer.on("scrollAtBottom",function(data){
 				queryor.getMore(that.getFilter());
 			})
-			listFilter && listFilter.on("filter.change",function(data){
-				queryor.refresh(data);
-			});
+	//		listFilter && listFilter.on("filter.change",function(data){
+	//			queryor.refresh(data);
+	//		});
 			$("#searchInp").on("input",function(e){
 				that.onSearchInpChange(e);
 			})
 			this.initRouter();
 			queryor = new Queryor();
 			topic = new Topic();
-			topic.on("topic.change",function(topic){
-				if(listFilter){
-					if(topic!=="不限"){
-						listFilter.setFilterItem($("#switchTopicBtn"),topic,topic);
-					}else{
-						listFilter.setFilterItem($("#switchTopicBtn"),"",topic);
-					}
-					queryor.refresh(that.getFilter());
-				}
+			topic.on("topic.change",function(data){
+				if(!listFilter) return false;
+				var val = data.val;
+				var text = data.text;
+				listFilter.setFilterItem("#switchTopicBtn",val,text);
+				queryor.refresh(that.getFilter());
 			})
 			queryor.refresh(this.getFilter());
 		},
@@ -241,17 +144,17 @@
 	module.exports = List;
 
 /***/ },
-/* 7 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Created by Administrator on 15-11-6.
 	 */
-	var Common = __webpack_require__(3);
+	var Common = __webpack_require__(4);
 	var common = new Common();
-	var Api = __webpack_require__(4);
+	var Api = __webpack_require__(5);
 	var api = new Api();
-	var UI = __webpack_require__(8);
+	var UI = __webpack_require__(6);
 	var ui = new UI();
 	var Queryor = RichBase.extend({
 		statics : {},
@@ -283,7 +186,11 @@
 			if(cache){ //走缓存
 				this.currentPage = cache.page;
 				this.totalPage = cache.total;
-				ui.update(cache.list,"refresh.success");
+				if(cache.list.length){
+					ui.update(cache.list,"refresh.success");
+				}else{
+					ui.update([],"refresh.empty");
+				}
 			}else{ //请求数据
 				var fetchParams = {
 					page : 1,
@@ -391,7 +298,99 @@
 	module.exports = Queryor;
 
 /***/ },
-/* 8 */
+/* 4 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by Administrator on 15-11-6.
+	 */
+	var Common = RichBase.extend({
+		getKeyword : function(){
+			return $("#searchInp").val();
+		},
+		getPtype : function(){
+			return "A";
+		},
+		switchPage : function(pageId){
+			if(typeof pageId==="undefined") return false;
+			$(pageId).addClass("current").siblings().removeClass("current");
+		}
+	});
+	module.exports = Common;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by Administrator on 15-11-6.
+	 */
+	var fn = new Function;
+	var Api = RichBase.extend({
+		statics : {
+			defaults : {
+				api : "api/v0.0.3/order.php",
+				type : "A",
+				timeout : 10 * 1000,
+				pageSize : 10
+			}
+		},
+		init : function(){},
+		fetchData : function(opt){
+			var statics = this.statics.defaults;
+			var opt = opt || {};
+			var ajaxParam = {};
+			var defaults = {
+				action : "product_list",
+				page : 1,
+				url : statics.api,
+				size : statics.pageSize,
+				type : statics.type,
+				ttimeout : statics.ttimeout,
+				loading : fn,
+				removeLoading : fn,
+				success : fn,
+				empty : fn,
+				fail : fn,
+				timeout : fn,
+				serverError : fn
+			};
+			for(var i in defaults){
+				if(typeof opt[i]==="undefined") opt[i] = defaults[i];
+			}
+			for(var i in opt){
+				var val = opt[i];
+				if((typeof val!=="function") && (i!="url") && (i!="ttimeout")) ajaxParam[i] = val;
+			}
+			if(!ajaxParam["type"]) ajaxParam["type"] = statics.type;
+			PFT.Ajax({
+				url : opt.url,
+				type : "get",
+				dataType : "json",
+				data : ajaxParam,
+				ttimeout : opt.ttimeout,
+				loading : function(){ opt.loading()},
+				removeLoading : function(){ opt.removeLoading()},
+				timeout : function(res){ opt.timeout(res)},
+				serverError : function(res){ opt.serverError(res)}
+			},function(res){
+				var list = res.list;
+				if(list && ({}.toString.call(list)=="[object Array]")){
+					if(list.length){
+						opt.success(res);
+					}else{
+						opt.empty(res);
+					}
+				}else{
+					opt.fail(res);
+				}
+			})
+		}
+	});
+	module.exports = Api;
+
+/***/ },
+/* 6 */
 /***/ function(module, exports) {
 
 	/**
@@ -467,13 +466,13 @@
 	module.exports = UI;
 
 /***/ },
-/* 9 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Created by Administrator on 15-11-9.
 	 */
-	var Common = __webpack_require__(3);
+	var Common = __webpack_require__(4);
 	var common = new Common();
 	var Topic = RichBase.extend({
 		isInit : false,
@@ -488,11 +487,13 @@
 			$("#certainTopicBtn").on("tap",function(e){
 				var tarBtn = $(this);
 				var topic_orign = tarBtn.attr("data-topic");
-				var topic_new = that.listUl.children(".active").find(".t").text();
+				var topic_new = that.listUl.children(".active");
+				var topic_new_val = topic_new.attr("data-val");
+				var topic_new_text = topic_new.attr("data-text");
 				window.history.back();
-				if(topic_new && topic_new!==topic_orign){
-					tarBtn.attr("data-topic",topic_new);
-					that.fire("topic.change",topic_new);
+				if(topic_orign!==topic_new_val){
+					tarBtn.attr("data-topic",topic_new_val);
+					that.fire("topic.change",{val:topic_new_val,text:topic_new_text})
 				}
 			})
 		},
@@ -507,8 +508,8 @@
 			setTimeout(function(){
 				$("#topicListUl").children().each(function(){
 					var item = $(this);
-					var text = item.text();
-					if(text==active) item.addClass("active").siblings().removeClass("active");
+					var val = item.attr("data-val");
+					if(val==active) item.addClass("active").siblings().removeClass("active");
 				})
 			},100)
 		},
@@ -520,10 +521,10 @@
 				},
 				removeLoading : function(){ listUl.html("")},
 				success : function(topics){
-					var html = '<li class="topicItem all"><span class="t">不限</span><i class="iconfont">&#xe6b6;</i></li>';
+					var html = '<li class="topicItem all" data-val="" data-text="不限"><span class="t">不限</span><i class="iconfont">&#xe6b6;</i></li>';
 					for(var i in topics){
 						var topic = topics[i];
-						html += '<li class="topicItem"><span class="t">'+topic+'</span><i class="iconfont">&#xe6b6;</i></li>';
+						html += '<li class="topicItem" data-val="'+topic+'" data-text="'+topic+'"><span class="t">'+topic+'</span><i class="iconfont">&#xe6b6;</i></li>';
 					}
 					listUl.html(html);
 				},

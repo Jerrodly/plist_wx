@@ -37,7 +37,11 @@ var Queryor = RichBase.extend({
 		if(cache){ //走缓存
 			this.currentPage = cache.page;
 			this.totalPage = cache.total;
-			ui.update(cache.list,"refresh.success");
+			if(cache.list.length){
+				ui.update(cache.list,"refresh.success");
+			}else{
+				ui.update([],"refresh.empty");
+			}
 		}else{ //请求数据
 			var fetchParams = {
 				page : 1,
