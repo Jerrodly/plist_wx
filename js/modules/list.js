@@ -3,6 +3,8 @@
  */
 var Queryor = require("./list.query.js");
 var queryor = null;
+var Detail = require("./pdetail.js");
+var detail = null;
 var Topic = require("./topic.js");
 var topic = null;
 var Common = require("./common.js");
@@ -56,8 +58,12 @@ var List = RichBase.extend({
 		listFilter && listFilter.on("ptype.switch",function(data){
 			queryor.refresh(that.getFilter());
 		})
+		//产品详情模块
+		detail = new Detail();
 		//初始化页面
-		queryor.refresh(this.getFilter());
+		common.switchPage("#detailPage");
+		detail.show_ticketList(38);
+		//queryor.refresh(this.getFilter());
 	},
 	initRouter : function(){
 		var listFilter = this.listFilter || null;
@@ -74,6 +80,12 @@ var List = RichBase.extend({
 			},
 			ptype : function(data){
 				listFilter && listFilter.showPtypeSelector(common.getPtype());
+			},
+			detail : function(data){
+				var lid = data.lid;
+				var ptype = data.ptype;
+				if(!lid || !ptype) return false;
+				detail.show(lid,ptype);
 			}
 		})
 	},

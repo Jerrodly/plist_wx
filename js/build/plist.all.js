@@ -72,7 +72,9 @@
 	 */
 	var Queryor = __webpack_require__(3);
 	var queryor = null;
-	var Topic = __webpack_require__(7);
+	var Detail = __webpack_require__(7);
+	var detail = null;
+	var Topic = __webpack_require__(8);
 	var topic = null;
 	var Common = __webpack_require__(4);
 	var common = new Common();
@@ -125,8 +127,12 @@
 			listFilter && listFilter.on("ptype.switch",function(data){
 				queryor.refresh(that.getFilter());
 			})
+			//产品详情模块
+			detail = new Detail();
 			//初始化页面
-			queryor.refresh(this.getFilter());
+			common.switchPage("#detailPage");
+			detail.show_ticketList(38);
+			//queryor.refresh(this.getFilter());
 		},
 		initRouter : function(){
 			var listFilter = this.listFilter || null;
@@ -143,6 +149,12 @@
 				},
 				ptype : function(data){
 					listFilter && listFilter.showPtypeSelector(common.getPtype());
+				},
+				detail : function(data){
+					var lid = data.lid;
+					var ptype = data.ptype;
+					if(!lid || !ptype) return false;
+					detail.show(lid,ptype);
 				}
 			})
 		},
@@ -409,6 +421,167 @@
 					opt.fail(res);
 				}
 			})
+		},
+		/**
+		 * 根据产品lid 获取产品详情页所需要的对应详情信息
+		 * @param lid
+		 * @param opt
+		 */
+		fetchDetail : function(lid,opt){
+			if(!lid) return false;
+			opt = opt || {};
+			var fn = new Function();
+			var loading = opt.loading || fn;
+			var removeLoading = opt.removeLoading || fn;
+			var success = opt.success || fn;
+			var fail = opt.fail || fn;
+			var timeout = opt.timeout || fn;
+			var serverError = opt.serverError || fn;
+			PFT.Ajax({
+				url : "",
+				type : "get",
+				dataType : "json",
+				data : {
+					action : "get_product_detail",
+					lid : lid
+				},
+				loading : function(){ loading()},
+				removeLoading : function(){ removeLoading()},
+				timeout : function(res){ timeout(res)},
+				serverError : function(res){ serverError(res)}
+			},function(res){
+				var code = res.code;
+				if(code==200){
+					success(res);
+				}else{
+					fail(res);
+				}
+			})
+		},
+		/**
+		 * 根据产品lid 获取产品详情页的票列表
+		 * @param lid
+		 * @param opt
+		 */
+		fetch_ticketList : function(lid,opt){
+			if(!lid) return false;
+			opt = opt || {};
+			var fn = new Function();
+			var loading = opt.loading || fn;
+			var removeLoading = opt.removeLoading || fn;
+			var success = opt.success || fn;
+			var empty = opt.empty || fn;
+			var fail = opt.fail || fn;
+			var timeout = opt.timeout || fn;
+			var serverError = opt.serverError || fn;
+			PFT.Ajax({
+				url : PFT.Url.order_v3,
+				type : "get",
+				dataType : "json",
+				data : {
+					action : "ticket_list",
+					lid : lid
+				},
+				loading : function(){ loading()},
+				removeLoading : function(){ removeLoading()},
+				timeout : function(res){ timeout(res)},
+				serverError : function(res){ serverError(res)}
+			},function(res){
+				var list = res.list;
+				if(list){
+					if(list.length){
+						success(res);
+					}else{
+						empty(res);
+					}
+				}else{
+					fail(res)
+				}
+			})
+		},
+		/**
+		 * 根据产品lid 获取套票相关产品
+		 * @param lid
+		 * @param opt
+		 */
+		fetch_taoTicket : function(lid,opt){
+			if(!lid) return false;
+			opt = opt || {};
+			var fn = new Function();
+			var loading = opt.loading || fn;
+			var removeLoading = opt.removeLoading || fn;
+			var success = opt.success || fn;
+			var empty = opt.empty || fn;
+			var fail = opt.fail || fn;
+			var timeout = opt.timeout || fn;
+			var serverError = opt.serverError || fn;
+			PFT.Ajax({
+				url : PFT.Url.order_v3,
+				type : "get",
+				dataType : "json",
+				data : {
+					action : "package_list",
+					lid : lid
+				},
+				loading : function(){ loading()},
+				removeLoading : function(){ removeLoading()},
+				timeout : function(res){ timeout(res)},
+				serverError : function(res){ serverError(res)}
+			},function(res){
+				var list = res.list;
+				if(list){
+					if(list.length){
+						success(res);
+					}else{
+						empty(res);
+					}
+				}else{
+					fail(res)
+				}
+			})
+		},
+		/**
+		 * 根据产品lid ptype 获取相关主题推荐
+		 * @param lid
+		 * @param ptype
+		 * @param opt
+		 */
+		fetch_relTopicList : function(lid,ptype,opt){
+			if(!lid || !ptype) return false;
+			opt = opt || {};
+			var fn = new Function();
+			var loading = opt.loading || fn;
+			var removeLoading = opt.removeLoading || fn;
+			var success = opt.success || fn;
+			var empty = opt.empty || fn;
+			var fail = opt.fail || fn;
+			var timeout = opt.timeout || fn;
+			var serverError = opt.serverError || fn;
+			PFT.Ajax({
+				url : PFT.Url.order_v3,
+				type : "get",
+				dataType : "json",
+				data : {
+					action : "link_topic",
+					lid : lid,
+					ptype : ptype
+				},
+				loading : function(){ loading()},
+				removeLoading : function(){ removeLoading()},
+				timeout : function(res){ timeout(res)},
+				serverError : function(res){ serverError(res)}
+			},function(res){
+				var list = res.list;
+				if(list){
+					if(list.length){
+						success(res);
+					}else{
+						empty(res);
+					}
+				}else{
+					fail(res)
+				}
+			})
 		}
 	});
 	module.exports = Api;
@@ -491,6 +664,220 @@
 
 /***/ },
 /* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Created by Administrator on 15-11-11.
+	 */
+	var Api = __webpack_require__(5);
+	var api = new Api();
+	var Common = __webpack_require__(4);
+	var common = new Common();
+	var isInit = false;
+	var Detail = RichBase.extend({
+		last_lid : "",
+		cacheData : {},
+		bootstrap : function(){
+
+		},
+		show : function(lid,ptype){
+			if(!isInit){
+				isInit = true;
+				this.bootstrap(); //初始化详情模块
+			}
+			if(!lid || !ptype) return false;
+			common.switchPage("#detailPage");
+			return false;
+			if(lid==this.last_lid) return;
+			this.show_mainDetail(lid);
+			this.show_ticketList(lid);
+			this.show_taoTicket(lid);
+			this.show_relTopicList(lid,ptype);
+			this.last_lid = lid;
+		},
+		//基本信息
+		show_mainDetail : function(lid){
+			var that = this;
+			var cacheData = this.cacheData[lid] || {};
+			var cache = cacheData["mainDetail"];
+			if(cache){ //走缓存
+				this.render_mainDetail("cache",cache);
+			}else{ //请求新数据
+				api.fetchDetail(lid,{
+					loading : function(){
+						that.render_mainDetail("loading");
+					},
+					removeLoading : function(){
+						that.render_mainDetail("removeLoading");
+					},
+					success : function(res){
+						that.cacheData[lid]["mainDetail"] = res; //存入缓存，避免二次请求
+						that.render_mainDetail("success",res);
+					},
+					fail : function(res){
+						that.render_mainDetail("fail",res);
+					},
+					timeout : function(res){
+						that.render_mainDetail("timeout",res);
+					},
+					serverError : function(res){
+						that.render_mainDetail("serverError",res);
+					}
+				})
+			}
+		},
+		//票列表
+		show_ticketList : function(lid){
+			var that = this;
+			var cacheData = this.cacheData[lid] || (this.cacheData[lid]={});
+			var cache = cacheData["ticketList"];
+			if(cache){ //走缓存
+				this.render_ticketList("cache",cache);
+			}else{ //请求新数据
+				api.fetch_ticketList(lid,{
+					loading : function(){
+						that.render_ticketList("loading");
+					},
+					removeLoading : function(){
+						that.render_ticketList("removeLoading");
+					},
+					success : function(res){
+						that.cacheData[lid]["ticketList"] = res;
+						that.render_ticketList("success",res);
+					},
+					empty : function(res){
+						that.cacheData[lid]["ticketList"] = res;
+						that.render_ticketList("empty",res);
+					},
+					fail : function(res){
+						that.render_ticketList("fail",res);
+					},
+					timeout : function(res){
+						that.render_ticketList("timeout",res);
+					},
+					serverError : function(res){
+						that.render_ticketList("serverError",res);
+					}
+				})
+			}
+		},
+		//套票相关
+		show_taoTicket : function(lid){
+			var that = this;
+			var cacheData = this.cacheData[lid] || {};
+			var cache = cacheData["taoTicket"];
+			if(cache){ //走缓存
+				this.render_taoTicket("cache",cache);
+			}else{ //请求新数据
+				api.fetch_taoTicket(lid,{
+					loading : function(){
+						that.render_taoTicket("loading");
+					},
+					removeLoading : function(){
+						that.render_taoTicket("removeLoading");
+					},
+					success : function(res){
+						that.cacheData[lid]["taoTicket"] = res;
+						that.render_taoTicket("success",res);
+					},
+					empty : function(res){
+						that.cacheData[lid]["taoTicket"] = res;
+						that.render_taoTicket("empty",res);
+					},
+					fail : function(res){
+						that.render_taoTicket("fail",res);
+					},
+					timeout : function(res){
+						that.render_taoTicket("timeout",res);
+					},
+					serverError : function(res){
+						that.render_taoTicket("serverError",res);
+					}
+				})
+			}
+		},
+		//相关主题推荐
+		show_relTopicList : function(lid,ptype){
+			var that = this;
+			var cacheData = this.cacheData[lid] || {};
+			var cache = cacheData["relTopicList"];
+			if(cache){ //走缓存
+				this.render_taoTicket("cache",cache);
+			}else{ //请求新数据
+				api.fetch_taoTicket(lid,ptype,{
+					loading : function(){
+						that.render_relTopicList("loading");
+					},
+					removeLoading : function(){
+						that.render_relTopicList("removeLoading");
+					},
+					success : function(res){
+						that.cacheData[lid]["relTopicList"] = res;
+						that.render_relTopicList("success",res);
+					},
+					empty : function(res){
+						that.cacheData[lid]["relTopicList"] = res;
+						that.render_relTopicList("empty",res);
+					},
+					fail : function(res){
+						that.render_taoTicket("fail",res);
+					},
+					timeout : function(res){
+						that.render_relTopicList("timeout",res);
+					},
+					serverError : function(res){
+						that.render_relTopicList("serverError",res);
+					}
+				})
+			}
+		},
+		//基本信息
+		render_mainDetail : function(type,data){
+
+		},
+		//票列表
+		render_ticketList : function(type,data){
+			var html = "";
+			var listUl = $("#pd_ticketListUl");
+			var tpl = $("#ticketList-item-tpl").html();
+			if(type=="success"){
+				var template = _.template(tpl);
+				html = template({data:data.list});
+			}else if(type=="cache"){
+
+			}else if(type=="loading"){
+				html = this.getAjaxStatusTxt("loading","加载门票列表...");
+			}else if(type=="removeLoading"){
+				html = "";
+			}else if(type=="empty"){
+				html = this.getAjaxStatusTxt("empty","该景点暂无可出售的门票");
+			}else if(type=="fail"){
+				html = this.getAjaxStatusTxt("fail","请求票类列表出错，请稍后重试...");
+			}else if(type=="timeout"){
+				html = this.getAjaxStatusTxt("timeout","请求超时，请稍后重试...");
+			}else if(type=="serverError"){
+				html = this.getAjaxStatusTxt("serverError","请求出错，请稍后重试...");
+			}
+			listUl.html(html);
+		},
+		//相关套票
+		render_taoTicket : function(type,data){},
+		//相关主题推荐
+		render_relTopicList : function(type,data){},
+		getAjaxStatusTxt : function(type,text){
+			if(type=="loading"){
+				text = text || "正在加载数据..."
+				return '<li class="sta '+type+'"><i class="iconfont loading icon">&#xe644;</i><span class="t">'+text+'</span></li>'
+			}else{
+				text = text || "请求完成";
+				return '<li class="sta '+type+'"><i class="iconfont icon">&#xe669;</i><span class="">'+text+'</span></li>';
+			}
+		}
+	});
+	module.exports = Detail;
+
+/***/ },
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**

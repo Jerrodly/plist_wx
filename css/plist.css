@@ -1,0 +1,45 @@
+body{ background-color:#f1f2f6}
+.page{ position:relative; display:none}
+.page.current{ display:block}
+.fixHead{ position:fixed; z-index:5;}
+.fixHead > .con{ position:relative; height:100%; overflow:hidden; font-size:14px; color:#fff; text-align:center; line-height:44px;}
+.fixHead.plist > .con .searchIcon{ position:absolute; top:0px; left:8px; color:#8c8c8c;}
+.fixHead .searchBtn{ display:block; width:100%; height:31px; line-height:31px; margin-top:7px; background:#b6e1f4; text-align:center; border:0 none; border-radius:3px; color:#049ad5}
+.fixHead .searchBtn .t{ font-size:1rem; vertical-align:middle}
+.fixHead .searchBtn .iconfont{ font-size:1rem; vertical-align:middle; margin-right:4px;}
+.fixHead .btn.certainTopicBtn{ width:50px; right:0; color:#fff}
+.listUl.plist{ margin:54px 10px 40px}
+#listUl .sta{ width:100%; height:200px; line-height:200px; text-align:center; background-color:#fff}
+#listUl .sta .iconfont{vertical-align:middle; margin-right:2px;}
+#listUl .sta .t{vertical-align:middle;}
+#searchInp_list{ display:block; width:100%; height:32px; margin-top:6px; padding:6px 0 6px 28px; background-color:#b6e1f4; border:0 none; border-radius:3px; -webkit-box-sizing:border-box; box-sizing:border-box;}
+#searchInp_list:focus{ background-color:#fff; color:#F07845}
+
+.listUl.topic{ margin:44px 0 50px; background:#fff; }
+.topicItem{ height:48px; line-height:48px; padding:0 15px 0 20px; overflow:hidden; border-bottom:1px solid #dfdfdf}
+.topicItem .t{ float:left;}
+.topicItem .iconfont{ float:right; display:none}
+.topicItem.active .iconfont{ display:inline-block; color:#F07845}
+.topicItem.active .t{ color:#F07845}
+
+
+/* pdetail */
+#detailPage{ background:#F0F3F5}
+#bannerWrap{ position:relative; width:100%; height:200px; line-height:200px; text-align:center; overflow:hidden; background:#fff}
+#detailPageCon{ margin-top:44px;}
+#openJQInfoBtn{ position: absolute; bottom: 20px; right: 15px; width: 60px; height:23px; line-height:23px; font-size: 12px; text-align:center; color: #303D46; background:rgba(255,255,255,.8); border-radius:3px;}
+#locationMapTriggerBtn{ display:block; height:46px; line-height:46px; padding:0 10px; margin-bottom:10px; border-bottom:1px solid #dbdbdb; -webkit-box-sizing:border-box; box-sizing:border-box; overflow:hidden; background:#fff;}
+#locationMapTriggerBtn .t{ float:left; color:#92A0AB; font-size:14px;}
+#locationMapTriggerBtn .iconfont{ float:right;}
+#pd_ticketListUl{ background:#fff}
+#detailPage .sta{ width:100%; height:150px; line-height:150px; text-align:center; background:#fff; border-top:1px solid #dbdbdb; border-bottom:1px solid #dbdbdb}
+#detailPage .sta .iconfont{ vertical-align:middle; margin-right:2px;}
+#detailPage .sta .t{ vertical-align:middle; font-size:14px;}
+/* 产品详情模块，门票列表 */
+#pd_ticketListUl .ticketUl-item { padding: 15px 10px; overflow: hidden; background: #FFF; border-bottom:1px solid #dbdbdb}
+#pd_ticketListUl .ticketUl-item:first-child{ border-top:1px solid #dbdbdb}
+#pd_ticketListUl .ticketUl-item .addressBox{position: relative; font-size: 12px; background: #FFF;}
+#pd_ticketListUl .ticketUl-item .addressBox .iconNav{position: absolute; right: 0; color: #0797D9; font-size:16px}
+
+
+

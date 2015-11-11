@@ -26,7 +26,7 @@
 </style>
 <script id="list-item-tpl" type="text/template">
     <li class="item itemBox">
-        <a href="h5/pdetail.html?lid=<%=id%>" class="con">
+        <a href="#detail?lid=<%=id%>&ptype=<%=ptype%>" data-href="h5/pdetail.html?lid=<%=id%>" class="con">
             <div class="photoBox">
                 <img style="width:0; height:0" src="<%=imgpath%>" onload="this.parentNode.removeChild(this.nextSibling);this.style.width=&apos;100%&apos;;this.style.height=&apos;auto&apos;" onerror="this.parentNode.removeChild(this)" alt=""/><img src="http://www.12301.cc/images/defaultThum.jpg" alt=""/>
             </div>
@@ -39,4 +39,27 @@
             </div>
         </a>
     </li>
-</script>   
+</script>
+<script id="ticketList-item-tpl" type="text/template">
+    <% _.each(data,function(item){ %>
+    <li class="ticketUl-item">
+        <div class="setPosition">
+            <div class="ltBox">
+                <div class="setFont"><%=item.title%></div>
+                <div class="setColor setMT_10"><%=item.usetime%></div>
+                <div class="tipBox">
+                <% if(item.bookTimeDay>0){ %>
+                    <em class="setBorder_a">提前<%=item.bookTimeDay%>天</em>
+                <% }else if(item.bookTimeDay*1==0){ %>
+                    <em class="setBorder_a">今日可用</em>
+                <% } %>
+                </div>
+            </div>
+            <div class="rtBox">
+                <div class="setSize setColor_a"><i class="yen">&yen;</i><span class="num"><%=item.jsprice%></span></div>
+                <a class="orderBtn ui-shadow" href="booking.html?aid=<%=item.aid%>&pid=<%=item.pid%>">预订<i class="iconfont">&#xe60d;</i></a>
+            </div>
+        </div>
+    </li>
+    <% }) %>
+</script>

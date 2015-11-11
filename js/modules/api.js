@@ -61,6 +61,167 @@ var Api = RichBase.extend({
 				opt.fail(res);
 			}
 		})
+	},
+	/**
+	 * 根据产品lid 获取产品详情页所需要的对应详情信息
+	 * @param lid
+	 * @param opt
+	 */
+	fetchDetail : function(lid,opt){
+		if(!lid) return false;
+		opt = opt || {};
+		var fn = new Function();
+		var loading = opt.loading || fn;
+		var removeLoading = opt.removeLoading || fn;
+		var success = opt.success || fn;
+		var fail = opt.fail || fn;
+		var timeout = opt.timeout || fn;
+		var serverError = opt.serverError || fn;
+		PFT.Ajax({
+			url : "",
+			type : "get",
+			dataType : "json",
+			data : {
+				action : "get_product_detail",
+				lid : lid
+			},
+			loading : function(){ loading()},
+			removeLoading : function(){ removeLoading()},
+			timeout : function(res){ timeout(res)},
+			serverError : function(res){ serverError(res)}
+		},function(res){
+			var code = res.code;
+			if(code==200){
+				success(res);
+			}else{
+				fail(res);
+			}
+		})
+	},
+	/**
+	 * 根据产品lid 获取产品详情页的票列表
+	 * @param lid
+	 * @param opt
+	 */
+	fetch_ticketList : function(lid,opt){
+		if(!lid) return false;
+		opt = opt || {};
+		var fn = new Function();
+		var loading = opt.loading || fn;
+		var removeLoading = opt.removeLoading || fn;
+		var success = opt.success || fn;
+		var empty = opt.empty || fn;
+		var fail = opt.fail || fn;
+		var timeout = opt.timeout || fn;
+		var serverError = opt.serverError || fn;
+		PFT.Ajax({
+			url : PFT.Url.order_v3,
+			type : "get",
+			dataType : "json",
+			data : {
+				action : "ticket_list",
+				lid : lid
+			},
+			loading : function(){ loading()},
+			removeLoading : function(){ removeLoading()},
+			timeout : function(res){ timeout(res)},
+			serverError : function(res){ serverError(res)}
+		},function(res){
+			var list = res.list;
+			if(list){
+				if(list.length){
+					success(res);
+				}else{
+					empty(res);
+				}
+			}else{
+				fail(res)
+			}
+		})
+	},
+	/**
+	 * 根据产品lid 获取套票相关产品
+	 * @param lid
+	 * @param opt
+	 */
+	fetch_taoTicket : function(lid,opt){
+		if(!lid) return false;
+		opt = opt || {};
+		var fn = new Function();
+		var loading = opt.loading || fn;
+		var removeLoading = opt.removeLoading || fn;
+		var success = opt.success || fn;
+		var empty = opt.empty || fn;
+		var fail = opt.fail || fn;
+		var timeout = opt.timeout || fn;
+		var serverError = opt.serverError || fn;
+		PFT.Ajax({
+			url : PFT.Url.order_v3,
+			type : "get",
+			dataType : "json",
+			data : {
+				action : "package_list",
+				lid : lid
+			},
+			loading : function(){ loading()},
+			removeLoading : function(){ removeLoading()},
+			timeout : function(res){ timeout(res)},
+			serverError : function(res){ serverError(res)}
+		},function(res){
+			var list = res.list;
+			if(list){
+				if(list.length){
+					success(res);
+				}else{
+					empty(res);
+				}
+			}else{
+				fail(res)
+			}
+		})
+	},
+	/**
+	 * 根据产品lid ptype 获取相关主题推荐
+	 * @param lid
+	 * @param ptype
+	 * @param opt
+	 */
+	fetch_relTopicList : function(lid,ptype,opt){
+		if(!lid || !ptype) return false;
+		opt = opt || {};
+		var fn = new Function();
+		var loading = opt.loading || fn;
+		var removeLoading = opt.removeLoading || fn;
+		var success = opt.success || fn;
+		var empty = opt.empty || fn;
+		var fail = opt.fail || fn;
+		var timeout = opt.timeout || fn;
+		var serverError = opt.serverError || fn;
+		PFT.Ajax({
+			url : PFT.Url.order_v3,
+			type : "get",
+			dataType : "json",
+			data : {
+				action : "link_topic",
+				lid : lid,
+				ptype : ptype
+			},
+			loading : function(){ loading()},
+			removeLoading : function(){ removeLoading()},
+			timeout : function(res){ timeout(res)},
+			serverError : function(res){ serverError(res)}
+		},function(res){
+			var list = res.list;
+			if(list){
+				if(list.length){
+					success(res);
+				}else{
+					empty(res);
+				}
+			}else{
+				fail(res)
+			}
+		})
 	}
 });
 module.exports = Api;
