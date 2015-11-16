@@ -1,3 +1,4 @@
+<script type="text/javascript">document.title="产品列表"</script>
 <link rel="stylesheet" href="http://wx.12301.cc/modules/plist/css/plist.css"/>
 <div id="bodyWrapper" class="bodyWrapper">
     <div id="listPage" class="page current list">
@@ -30,13 +31,46 @@
         <div id="detailPageCon" class="detailPageCon">
             <div id="bannerWrap">
                 <img style="width:0; height:0" onerror="this.src='http://www.12301.cc/images/defaultThum.jpg'" onload="this.parentNode.removeChild(this.nextSibling); this.style.width='100%'; this.style.height='auto'" src="http://www.12301.cc/prodimgs/100010/20131113/13843226521151_thumb.jpg" alt=""/><img src="http://www.12301.cc/images/icons/gloading.gif" alt=""/>
-                <a id="openJQInfoBtn" href="#openJQInfo">景区介绍</a>
+                <a id="openJQInfoBtn" href="#detailmsg">景区介绍</a>
             </div>
             <a id="locationMapTriggerBtn" href="javascript:void(0)">
                 <span class="t" id="pd_area_text">福建省福州市</span><i class="iconfont iconNav">&#xe66a;</i>
             </a>
             <ul id="pd_ticketListUl" class="pd_ticketListUl"></ul>
+            <!--相关套票-->
+            <div id="taoTicketBox" class="taoTicketBox msgBox">
+                <div class="topTit">
+                    <i class="iconfont prefixIcon">&#xe69f;</i><span class="t">相关套票</span>
+                    <span class="triggerBtn"><i class="iconfont icon down">&#xe60b;</i><i class="iconfont icon up">&#xe610;</i></span>
+                </div>
+                <div class="msgBoxCon"><div id="taoTicketListUl"></div></div>
+            </div>
+            <!--预订须知-->
+            <div id="taoTicketBox" class="bookNotice msgBox">
+                <div class="topTit">
+                    <i class="iconfont prefixIcon">&#xe65f;</i><span class="t">预订须知</span>
+                    <span class="triggerBtn"><i class="iconfont icon down">&#xe60b;</i><i class="iconfont icon up">&#xe610;</i></span>
+                </div>
+                <div class="msgBoxCon"><div id="jqtsTextBox" class="msgTxtCon"></div></div>
+            </div>
+            <!--交通指南-->
+            <div id="taoTicketBox" class="bookNotice msgBox">
+                <div class="topTit">
+                    <i class="iconfont prefixIcon">&#xe65d;</i><span class="t">交通指南</span>
+                    <span class="triggerBtn"><i class="iconfont icon down">&#xe60b;</i><i class="iconfont icon up">&#xe610;</i></span>
+                </div>
+                <div class="msgBoxCon"><div id="jtznTextBox" class="msgTxtCon"></div></div>
+            </div>
+            <div id="pd_relTopicList" class="pd_relTopicList"></div>
         </div>
+    </div>
+    <div id="detailMsgPage" class="detailMsgPage page">
+        <div class="ui-fixHead fixHead detailMsg">
+            <div class="con"><span id="" class="detailTitleTxt">景点简介</span></div>
+            <a class="btn goback" href="javascript:window.history.go(-1)"><i class="iconfont">&#xe60c;</i></a>
+            <a class="btn user" href="javascript:window.location.href='usercenter.html'"><i class="iconfont">&#xe682;</i></a>
+        </div>
+        <div id="detailMsgConText" class="detailMsgConText"></div>
     </div>
 </div>
 <?php include "/var/www/html/wx/modules/plist/tpl/tpl.html"; ?>

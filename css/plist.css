@@ -9,7 +9,8 @@ body{ background-color:#f1f2f6}
 .fixHead .searchBtn .iconfont{ font-size:1rem; vertical-align:middle; margin-right:4px;}
 .fixHead .btn.certainTopicBtn{ width:50px; right:0; color:#fff}
 .listUl.plist{ margin:54px 10px 40px}
-#listUl .sta{ width:100%; height:200px; line-height:200px; text-align:center; background-color:#fff}
+#listUl .sta{ width:100%; height:200px; line-height:200px; clear:both; text-align:center; background-color:#fff}
+#listUl .sta.getMore.loading{ height:50px; line-height:50px;}
 #listUl .sta .iconfont{vertical-align:middle; margin-right:2px;}
 #listUl .sta .t{vertical-align:middle;}
 #searchInp_list{ display:block; width:100%; height:32px; margin-top:6px; padding:6px 0 6px 28px; background-color:#b6e1f4; border:0 none; border-radius:3px; -webkit-box-sizing:border-box; box-sizing:border-box;}
@@ -31,15 +32,27 @@ body{ background-color:#f1f2f6}
 #locationMapTriggerBtn{ display:block; height:46px; line-height:46px; padding:0 10px; margin-bottom:10px; border-bottom:1px solid #dbdbdb; -webkit-box-sizing:border-box; box-sizing:border-box; overflow:hidden; background:#fff;}
 #locationMapTriggerBtn .t{ float:left; color:#92A0AB; font-size:14px;}
 #locationMapTriggerBtn .iconfont{ float:right;}
-#pd_ticketListUl{ background:#fff}
+#pd_ticketListUl{ background:#fff; margin-bottom:10px;}
 #detailPage .sta{ width:100%; height:150px; line-height:150px; text-align:center; background:#fff; border-top:1px solid #dbdbdb; border-bottom:1px solid #dbdbdb}
-#detailPage .sta .iconfont{ vertical-align:middle; margin-right:2px;}
+#detailPage .taoTicketBox .sta{ border-top:0 none}
+#detailPage .sta.empty{ height:50px; line-height:50px;}
+#detailPage .sta .iconfont{ top:-1px; vertical-align:middle; margin-right:2px;}
 #detailPage .sta .t{ vertical-align:middle; font-size:14px;}
-/* 产品详情模块，门票列表 */
-#pd_ticketListUl .ticketUl-item { padding: 15px 10px; overflow: hidden; background: #FFF; border-bottom:1px solid #dbdbdb}
-#pd_ticketListUl .ticketUl-item:first-child{ border-top:1px solid #dbdbdb}
-#pd_ticketListUl .ticketUl-item .addressBox{position: relative; font-size: 12px; background: #FFF;}
-#pd_ticketListUl .ticketUl-item .addressBox .iconNav{position: absolute; right: 0; color: #0797D9; font-size:16px}
 
 
-
+/* 信息盒子 */
+.msgBox{ margin-bottom:10px;}
+.msgBox .topTit{ position:relative; height:42px; line-height:42px; padding:0 10px; background:#fcfcfc; border-top:1px solid #dbdbdb; border-bottom:1px solid #dbdbdb;}
+.msgBox .topTit .prefixIcon{ vertical-align:middle; margin-right:3px; color:#4CB5E8}
+.msgBox .topTit .t{ vertical-align:middle; font-size:14px;}
+.msgBox .topTit .triggerBtn{ position:absolute; top:0; right:0; bottom:0; display:block; width:50px; text-align:center; line-height:inherit}
+.msgBox .topTit .triggerBtn:active{ background:#F2F2F2}
+.msgBox .topTit .triggerBtn .icon{ font-size:20px;}
+.msgBox .topTit .triggerBtn .up{ display:none;}
+.msgBox .topTit .triggerBtn.on .up{ display:inline;}
+.msgBox .topTit .triggerBtn.on .down{ display:none;}
+.msgBox .msgBoxCon{ height:0; -webkit-transition:height 0.3s; transition:height 0.3s; overflow:hidden}
+.msgBox .msgBoxCon .msgTxtCon{ padding:10px; background:#fff}
+.msgBox .msgBoxCon img{ width:100%;}
+#detailMsgConText{ padding:12px; margin-top:44px;}
+#detailMsgConText img{ width:100%;}

@@ -35,16 +35,14 @@
     </div>
 </div>
 <style type="text/css">
-    .ptypeSelector{ display:none; position:fixed; z-index:2; left:0; right:0; bottom:-260px; height:260px; background:#fff; border-top:3px solid #F07845; overflow:auto; -webkit-overflow-scrolling:touch; -webkit-transition:all 0.3s; transition:all 0.3s;}
+    .ptypeSelector{ display:none; position:fixed; z-index:2; left:0; right:0; bottom:-260px; height:240px; background:#fff; border-top:3px solid #F07845; overflow:auto; -webkit-overflow-scrolling:touch; -webkit-transition:all 0.3s; transition:all 0.3s;}
     .ptypeSelector.show{ display:block; bottom:40px;}
-    .ptypeSelector .ptypeLi{ height:50px; line-height:50px; text-align:center; font-size:16px; border-bottom:1px solid #dbdbdb}
-    .ptypeSelector .ptypeLi:last-child{ border-bottom:0 none}
-    .ptypeSelector .closeBtn{ position:absolute; right:5px; top:3px; z-index:5; display:block; width:32px; height:32px; line-height:32px; text-align:center; color:#333; background:#fff}
+    .ptypeSelector .ptypeLi{ height:44px; line-height:44px; text-align:center; font-size:16px; border-bottom:1px solid #dbdbdb}
+    .ptypeSelector .closeBtn{ display:block; width:100%; height:44px; margin-top:13px; line-height:44px; font-size:16px; text-align:center; color:#333; border-top:1px solid #dbdbdb; border-bottom:1px solid #dbdbdb; background:#fff}
     .ptypeSelector .closeBtn:active{ background:#dbdbdb;}
-    .ptypeSelector .closeBtn .iconfont{ font-size:22px;}
-    .ptypeSelector .typeUl{ margin-top:28px;}
+    .ptypeSelector .typeUl{ }
 </style>
 <div id="ptypeSelector" class="ptypeSelector">
-    <a class="closeBtn" href="javascript:window.history.back()"><i class="iconfont">&#xe634;</i></a>
     <ul class="typeUl"></ul>
+    <a class="closeBtn" href="javascript:window.history.back()">取消</a>
 </div>

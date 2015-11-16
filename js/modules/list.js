@@ -33,7 +33,7 @@ var List = RichBase.extend({
 		})
 		this.ListContainer.on("scrollAtBottom",function(data){
 			if($("#ptypeSelector").css("display")=="block") return false;
-			queryor.getMore(that.getFilter());
+			if($("#listPage").css("display")=="block") queryor.getMore(that.getFilter());
 		})
 		$("#searchInp_list").on("input",function(e){
 			that.onSearchInpChange(e);
@@ -61,14 +61,16 @@ var List = RichBase.extend({
 		//产品详情模块
 		detail = new Detail();
 		//初始化页面
-		common.switchPage("#detailPage");
-		detail.show_ticketList(38);
-		//queryor.refresh(this.getFilter());
+//		common.switchPage("#detailPage");
+		//detail.show_relTopicList(38,"A","度假山庄");
+//		detail.show_taoTicket(38);
+		queryor.refresh(this.getFilter());
 	},
 	initRouter : function(){
 		var listFilter = this.listFilter || null;
 		this.router = new PFT.Router({
 			default : function(data){
+				document.title = common.docTitle["home"];
 				common.switchPage("#listPage");
 				listFilter && listFilter.closePtypeSelector();
 			},
@@ -76,16 +78,19 @@ var List = RichBase.extend({
 				topic.show({active:data.active || ""})
 			},
 			city : function(data){
+				document.title = common.docTitle["city"];
 				common.switchPage("#cityQueryPage");
 			},
 			ptype : function(data){
 				listFilter && listFilter.showPtypeSelector(common.getPtype());
 			},
 			detail : function(data){
+				document.title = common.docTitle["detail"];
 				var lid = data.lid;
 				var ptype = data.ptype;
+				var topic = topic || "";
 				if(!lid || !ptype) return false;
-				detail.show(lid,ptype);
+				detail.show(lid,ptype,topic);
 			}
 		})
 	},

@@ -24,9 +24,10 @@
     .itemBox .price{ font-size:12px; margin-top: 2px; color:#F07845; padding-left:1px}
     .itemBox .price .yen{ font-size:12px; color: #F07845; margin-right: 2px;}
 </style>
+<!--产品列表页list item-->
 <script id="list-item-tpl" type="text/template">
     <li class="item itemBox">
-        <a href="#detail?lid=<%=id%>&ptype=<%=ptype%>" data-href="h5/pdetail.html?lid=<%=id%>" class="con">
+        <a href="#detail?lid=<%=id%>&ptype=<%=ptype%>&topic=<%=topic%>" data-href="h5/pdetail.html?lid=<%=id%>" class="con">
             <div class="photoBox">
                 <img style="width:0; height:0" src="<%=imgpath%>" onload="this.parentNode.removeChild(this.nextSibling);this.style.width=&apos;100%&apos;;this.style.height=&apos;auto&apos;" onerror="this.parentNode.removeChild(this)" alt=""/><img src="http://www.12301.cc/images/defaultThum.jpg" alt=""/>
             </div>
@@ -40,26 +41,75 @@
         </a>
     </li>
 </script>
+<!--产品详情页 票列表-->
+<style type="text/css">
+    .ticketUl-item{ position:relative; padding: 15px 10px; overflow: hidden; background: #FFF; border-bottom:1px solid #dbdbdb}
+    .ticketUl-item:first-child{ border-top:1px solid #dbdbdb}
+    .ticketUl-item .ltBox{ margin-right:80px;}
+    .ticketUl-item .ltBox .tit{ font-size:14px; color:#303D46; font-weight:bold; line-height:1.6}
+    .ticketUl-item .ltBox .time{ color:#92A0AB; margin:3px 0 8px}
+    .ticketUl-item .ltBox .tipBox{ padding: 2px 5px; border:1px solid #0797D9; color:#0797D9; border-radius:3px;}
+    .ticketUl-item .rtBox{ position:absolute; width:80px; top:18px; right:10px; bottom:18px; text-align:center;}
+    .ticketUl-item .rtBox .price{ color:#F07845}
+    .ticketUl-item .rtBox .price .iconfont{ font-size:14px; margin-right:2px}
+    .ticketUl-item .rtBox .price .num{ font-size:20px;}
+    .ticketUl-item .rtBox .orderBtn{ display:inline-block; width:80%; height:30px; line-height:30px; margin:2px auto 0; color:#fff; background:#F07845; border-radius:20px;}
+    .ticketUl-item .rtBox .orderBtn .t{ position:relative; right:-2px; top:-1px; font-size:14px; vertical-align:middle}
+    .ticketUl-item .rtBox .orderBtn .iconfont{ font-size:14px; vertical-align:middle}
+</style>
 <script id="ticketList-item-tpl" type="text/template">
     <% _.each(data,function(item){ %>
     <li class="ticketUl-item">
-        <div class="setPosition">
-            <div class="ltBox">
-                <div class="setFont"><%=item.title%></div>
-                <div class="setColor setMT_10"><%=item.usetime%></div>
-                <div class="tipBox">
+        <div class="ltBox">
+            <p class="tit"><%=item.title%></p>
+            <div class="time"><%=item.usetime%></div>
+                <span class="tipBox">
                 <% if(item.bookTimeDay>0){ %>
                     <em class="setBorder_a">提前<%=item.bookTimeDay%>天</em>
                 <% }else if(item.bookTimeDay*1==0){ %>
                     <em class="setBorder_a">今日可用</em>
                 <% } %>
-                </div>
-            </div>
-            <div class="rtBox">
-                <div class="setSize setColor_a"><i class="yen">&yen;</i><span class="num"><%=item.jsprice%></span></div>
-                <a class="orderBtn ui-shadow" href="booking.html?aid=<%=item.aid%>&pid=<%=item.pid%>">预订<i class="iconfont">&#xe60d;</i></a>
-            </div>
+                </span>
+        </div>
+        <div class="rtBox">
+            <div class="price"><i class="yen">&yen;</i><span class="num"><%=item.jsprice%></span></div>
+            <a class="orderBtn ui-shadow" href="booking.html?aid=<%=item.aid%>&pid=<%=item.pid%>"><span class="t">预订</span><i class="iconfont">&#xe60d;</i></a>
         </div>
     </li>
     <% }) %>
+</script>
+
+<!--产品详情页 相关主题推荐列表-->
+<script id="relTopicList-item-tpl" type="text/template">
+    <% _.each(data,function(item,index){ %>
+        <% if(index==0 || inidex==1){ %>
+            <li class="relTopic-item item_<%=index*1+1%> item_twoCol">
+                <div class="photoBox"><img src="<%=item.imgpath%>" alt=""/></div>
+                <p class="pname gtextoverflow"><%=item.title%></p>
+                <p class="price setPosition">
+                    <i class="yen">&yen;</i><span class="num"><%=item.jsprice%></span><em class="setBorder borderColor tPosition">惠</em>
+                </p>
+            </li>
+        <% }else{ %>
+            <li class="relTopic-item item_<%=index*1+1%>">
+                <div class="photoBox"><img src="<%=item.imgpath%>" alt=""/></div>
+                <p class="pname gtextoverflow"><%=item.title%></p>
+                <p class="price setPosition">
+                    <i class="yen">&yen;</i><span class="num"><%=item.jsprice%></span><em class="setBorder borderColor tPosition">惠</em>
+                </p>
+            </li>
+        <% } %>
+    <% }) %>
+</script>
+
+<script id="taoTicketList-item-tpl" type="text/template">
+    <li class="taoTicketList-item">
+        <div class="ltBox">
+            <p class="setFont"><%=ltitle%>-<%=title%></p>
+        </div>
+        <div class="rtBox">
+            <div class="setSize_a setColor_a"><i class="yen">&yen;</i><span class="num"><%=uprice%></span></div>
+            <a class="orderBtn ui-shadow" href="##">预订<i class="iconfont setTop">&#xe60d;</i></a>
+        </div>
+    </li>
 </script>

@@ -78,7 +78,7 @@ var Api = RichBase.extend({
 		var timeout = opt.timeout || fn;
 		var serverError = opt.serverError || fn;
 		PFT.Ajax({
-			url : "",
+			url : PFT.Url.order_v3,
 			type : "get",
 			dataType : "json",
 			data : {
@@ -90,8 +90,8 @@ var Api = RichBase.extend({
 			timeout : function(res){ timeout(res)},
 			serverError : function(res){ serverError(res)}
 		},function(res){
-			var code = res.code;
-			if(code==200){
+			var status = res.status;
+			if(status=="success"){
 				success(res);
 			}else{
 				fail(res);
@@ -186,7 +186,7 @@ var Api = RichBase.extend({
 	 * @param ptype
 	 * @param opt
 	 */
-	fetch_relTopicList : function(lid,ptype,opt){
+	fetch_relTopicList : function(lid,ptype,topic,opt){
 		if(!lid || !ptype) return false;
 		opt = opt || {};
 		var fn = new Function();
@@ -204,7 +204,8 @@ var Api = RichBase.extend({
 			data : {
 				action : "link_topic",
 				lid : lid,
-				ptype : ptype
+				ptype : ptype,
+				topic : topic || ""
 			},
 			loading : function(){ loading()},
 			removeLoading : function(){ removeLoading()},
