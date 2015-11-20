@@ -27,6 +27,7 @@ body{ background-color:#f1f2f6}
 /* pdetail */
 #detailPage{ background:#F0F3F5}
 #bannerWrap{ position:relative; width:100%; height:200px; line-height:200px; text-align:center; overflow:hidden; background:#fff}
+.bannerWrap img{ width:100%;}
 #detailPageCon{ margin-top:44px;}
 #openJQInfoBtn{ position: absolute; bottom: 20px; right: 15px; width: 60px; height:23px; line-height:23px; font-size: 12px; text-align:center; color: #303D46; background:rgba(255,255,255,.8); border-radius:3px;}
 #locationMapTriggerBtn{ display:block; height:46px; line-height:46px; padding:0 10px; margin-bottom:10px; border-bottom:1px solid #dbdbdb; -webkit-box-sizing:border-box; box-sizing:border-box; overflow:hidden; background:#fff;}
@@ -38,7 +39,7 @@ body{ background-color:#f1f2f6}
 #detailPage .sta.empty{ height:50px; line-height:50px;}
 #detailPage .sta .iconfont{ top:-1px; vertical-align:middle; margin-right:2px;}
 #detailPage .sta .t{ vertical-align:middle; font-size:14px;}
-
+#photoLoadingImg{ width:auto; height:auto; position:relative; }
 
 /* 信息盒子 */
 .msgBox{ margin-bottom:10px;}

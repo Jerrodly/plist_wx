@@ -11,7 +11,7 @@
     }
     .itemBox:nth-child(2n+1){ margin-right:3%;}
     .itemBox > .con{ display:block; width:100%;}
-    .itemBox .photoBox{width:100%; height:100px; background-position: center; background-size: cover;
+    .itemBox .photoBox{width:100%; height:100px; overflow:hidden; background-position: center; background-size: cover;
         font-size:0; background-position: center; background-repeat: no-repeat;}
     .itemBox .photoBox table{ width:100%; height:100%; text-align:center}
     .itemBox .photoBox table,.itemBox .photoBox table tr,.itemBox .photoBox table td{ width:100%; height:100%; font-size:0}
@@ -73,7 +73,7 @@
         </div>
         <div class="rtBox">
             <div class="price"><i class="yen">&yen;</i><span class="num"><%=item.jsprice%></span></div>
-            <a class="orderBtn ui-shadow" href="booking.html?aid=<%=item.aid%>&pid=<%=item.pid%>"><span class="t">预订</span><i class="iconfont">&#xe60d;</i></a>
+            <a class="orderBtn ui-shadow" href="h5/booking.html?aid=<%=item.aid%>&pid=<%=item.pid%>"><span class="t">预订</span><i class="iconfont">&#xe60d;</i></a>
         </div>
     </li>
     <% }) %>

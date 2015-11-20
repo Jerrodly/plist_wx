@@ -688,6 +688,7 @@
 	var Common = __webpack_require__(4);
 	var common = new Common();
 	var isInit = false;
+	var ImgLoador = new PFT.ImageLoador();
 	var Detail = RichBase.extend({
 		EVENTS : {
 			"tap" : {
@@ -745,7 +746,8 @@
 			var cacheData = this.cacheData[lid] || (this.cacheData[lid]={});
 			var cache = cacheData["mainDetail"];
 			if(cache){ //走缓存
-				this.render_mainDetail("cache",{lid:lid,ptype:ptype,topic:topic});
+	//			this.render_mainDetail("cache",{lid:lid,ptype:ptype,topic:topic});
+				this.render_mainDetail("cache",cache);
 				that.fire("detail.complete",{lid:lid,ptype:ptype,topic:topic});
 			}else{ //请求新数据
 				api.fetchDetail(lid,{
@@ -885,16 +887,32 @@
 		//基本信息
 		render_mainDetail : function(type,data){
 			var html = "";
+			console.log(data)
 			if(type=="cache" && data.status=="fail") type="fail";
-
 			if(type=="success" || type=="cache"){
 				var details = data.details;
 				var openJQInfoBtn = $("#openJQInfoBtn");
 				var href = openJQInfoBtn.attr("href").split("?")[0];
+				var photoContainer = $("#bannerWrap");
 				openJQInfoBtn.attr("href",href+"?lid="+data.lid);
 				$("#detailTitleTxt").text(data.details.title);
 				$("#jqtsTextBox").html(data.details.jqts);
 				$("#jtznTextBox").html(data.details.jtzn);
+				ImgLoador.load(details.imgpath,{
+					loading : function(){
+						photoContainer.children("img").remove();
+						photoContainer.append('<img id="photoLoadingImg" src="http://www.12301.cc/images/icons/gloading.gif"/>');
+					},
+					removeLoading : function(){
+						$("#photoLoadingImg").remove();
+					},
+					success : function(src,img){
+						photoContainer.append(img);
+					},
+					error : function(src,img){
+						photoContainer.append('<img src="http://www.12301.cc/images/defaultThum.jpg"/>')
+					}
+				})
 			}else if(type=="loading"){
 				html = this.getAjaxStatusTxt("loading","加载门票列表...");
 			}else if(type=="removeLoading"){
